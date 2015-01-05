@@ -250,7 +250,7 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, doub
 void constructGraph(std::string outputLocation, int numberOfVideos){
     cout << "Entered constructGraph " << endl;
 
-    int noOfVertices, noOfVideos = 10;
+    int noOfVertices, noOfVideos = 100;
     string line;
     vector<string> stringVector;
     string edgeWeightsTxtName = outputLocation + "/edgeWeights.txt";
