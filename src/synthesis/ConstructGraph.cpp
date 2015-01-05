@@ -179,7 +179,7 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
     }
 
     Mat faceMat, prevMat, midMat;
-    const char* EXPRESSION_DISPLAY = "Expressions";
+    //const char* EXPRESSION_DISPLAY = "Expressions";
     //namedWindow(EXPRESSION_DISPLAY, CV_WINDOW_AUTOSIZE);
 
     // Display the traversed faces and make a video of the same
