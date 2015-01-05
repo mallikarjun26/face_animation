@@ -32,14 +32,14 @@ int findNextVertex(int currentVertex, map<int, list < pair<int, double > > > &ad
     nextVertex   = (*it).first;
     leastDist  = (*it).second;
 
-    cout << "Debug ! nextVertex:" << nextVertex << " leastDist:" << leastDist << endl;
+    // cout << "Debug ! nextVertex:" << nextVertex << " leastDist:" << leastDist << endl;
 
     it=adjacencyList[currentVertex].begin();
     for (; it!=adjacencyList[currentVertex].end(); ++it) {
         if(((*it).second <= leastDist) && (adjacencyList[(*it).first].size() > 0) ){
             nextVertex  = (*it).first;
             leastDist   = (*it).second;
-            cout << "Debug nextVertex:" << nextVertex << endl;
+            // cout << "Debug nextVertex:" << nextVertex << endl;
         }
     }
 
@@ -54,11 +54,11 @@ void traversalGreedyNextHop(map< int, list < pair<int, double > > > &adjacencyLi
 	cout << "Entered traversalGreedyNextHop " << endl;
 	traverseList.push_back(currentVertex);
 	int nextVertex = findNextVertex(currentVertex, adjacencyList, noOfVerticesLeft);
-	cout << "Debug 44:: Next Vertex" << nextVertex << "adjacencyList size:" << adjacencyList.size() << endl;
+	// cout << "Debug 44:: Next Vertex" << nextVertex << "adjacencyList size:" << adjacencyList.size() << endl;
 
 	int debugWhile = 0;
 	while((noOfVerticesLeft!=1) && (numberOfHops > 1)){
-        cout << "Debug 55:: Inside while. Next Vertex:: " << nextVertex << " VerticesLeft:: " << noOfVerticesLeft << " debugWhile::" << debugWhile << endl;
+        // cout << "Debug 55:: Inside while. Next Vertex:: " << nextVertex << " VerticesLeft:: " << noOfVerticesLeft << " debugWhile::" << debugWhile << endl;
         traverseList.push_back(nextVertex);
         currentVertex = nextVertex;
         nextVertex = findNextVertex(currentVertex, adjacencyList, noOfVerticesLeft);
@@ -77,8 +77,6 @@ map<int, list < pair<int, double > > > getGraph(string edgeWeightsTxtName, int& 
     double                                              edgeWeight;
     map<int, list < pair<int, double > > > adjacencyList;
     string line;
-
-    cout << "Entered constructGraph: Reading edge weights and build the graph" << endl;
 
     // Open the file to read all the edge weights.
     if(edgeWeightPtr.is_open()) {
@@ -151,17 +149,11 @@ map<int, list < pair<int, double > > > getGraph(string edgeWeightsTxtName, int& 
 
 }
 
-void synthesizeVideo(const string outputLocation, map<int, list < pair<int, double > > > adjacencyList, int videoNumber, int noOfVertices, int vertex1, int vertex2) {
+void getVideo(list<int> traverseList, string videoOutput, string outputLocation) {
 
-    string videoOutput = "", line;
+    string line;
     vector<string> stringVector;
-    list<int> traverseList;
 
-    // Traverse the graph
-    list<int> traverseList_g, traverseList_d;
-
-    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 20, noOfVertices); 
-    traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, outputLocation) ; 
 
     // Print the traverse route
     // cout << "Final traversal of Vertices and size" << traverseList.size() << endl;
@@ -172,12 +164,12 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, doub
 
 
     // Display the video
-    cout << "Expression animation" << endl;
+    cout << "Entered getVideo" << endl;
     string listOfFacesFileName = outputLocation + "/ListOfFaces.txt";
     ifstream listOfFacesFileNameHandle(listOfFacesFileName.c_str());
     vector<string> faceMap;
 
-    cout << "Collecting the mapping" << endl;
+    //cout << "Collecting the mapping" << endl;
     if(listOfFacesFileNameHandle.is_open()) {
         while(getline(listOfFacesFileNameHandle, line)) {
             split(stringVector, line, boost::is_any_of(" "));
@@ -193,19 +185,19 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, doub
     // Display the traversed faces and make a video of the same
     Size sizeT(200, 200);
     const string NAME = "Animation.avi";
-    cout << "DEBUG 11: " << NAME << endl;
+    //cout << "DEBUG 11: " << NAME << endl;
 
     VideoWriter outputVideo;
     //outputVideo.open(  , -1, 20, sizeT, true);
-    //outputVideo.open("/home/mallikarjun/Desktop/test2.avi", CV_FOURCC('D','I','V','X'), 5, Size (200, 200), true );
-    outputVideo.open(videoOutput, CV_FOURCC('D','I','V','X'), 5, Size (200, 200), true );
+    // outputVideo.open("/home/mallikarjun/Desktop/test2.avi", CV_FOURCC('D','I','V','X'), 5, Size (200, 200), true );
+    outputVideo.open(videoOutput, CV_FOURCC('M','P','E','G'), 2, Size (200, 200), true );
     if (!outputVideo.isOpened())
     {
         perror("Could not open the output video for write");
     }
 
     bool firstTime_bool = true;
-    cout << "Displaying the traversed faces" << endl;
+    // cout << "Displaying the traversed faces" << endl;
     for(list<int>::iterator it=traverseList.begin(); it!=traverseList.end(); it++) {
         int faceNumber = *it;
         //cout << "DEBUG 88:: faceMap[i]=" << faceMap[faceNumber] << endl;
@@ -232,6 +224,26 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, doub
         imshow(EXPRESSION_DISPLAY, faceMat);
         cvWaitKey(10);
     }
+ 
+}
+
+
+void synthesizeVideo(const string outputLocation, map<int, list < pair<int, double > > > adjacencyList, int videoNumber, int noOfVertices, int vertex1, int vertex2) {
+
+    string videoOutput_g = outputLocation + "/videos/" + "greedNextHop_" + to_string(videoNumber) + ".avi";
+    string videoOutput_d = outputLocation + "/videos/" + "dijkstra_" + to_string(videoNumber) + ".avi";
+    string line;
+    vector<string> stringVector;
+    list<int> traverseList;
+
+    // Traverse the graph
+    list<int> traverseList_g, traverseList_d;
+
+    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 20, noOfVertices); 
+    traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, outputLocation) ; 
+
+    getVideo(traverseList_g, videoOutput_g, outputLocation);
+    getVideo(traverseList_d, videoOutput_d, outputLocation);
 
 }
 

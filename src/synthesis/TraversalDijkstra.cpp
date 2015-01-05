@@ -79,7 +79,7 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 
 		// Build path for each fixed vertex
 		for (list<int>::iterator it = shortestPaths[prevFixedNodeList[nextHop]].begin(); it != shortestPaths[prevFixedNodeList[nextHop]].end(); it++) {
-			cout << "Debug 22:: " << *it << endl;
+			// cout << "Debug 22:: " << *it << endl;
 		    shortestPaths[nextHop].push_back(*it);
 		}
 		shortestPaths[nextHop].push_back(nextHop);

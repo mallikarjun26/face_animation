@@ -19,9 +19,12 @@ void constructGraph(std::string outputLocation, int numberOfVideos);
 
 int main(int argc, char *argv[]) {
   
-  string outputLocation = argv[1];    
+    cout << "------------- In MAIN ----------------" << endl;
 
-  constructGraph(outputLocation, 10);
+    // Initialization
+    string outputLocation = argv[1];    
+
+    constructGraph(outputLocation, 10);
 
 }
 
