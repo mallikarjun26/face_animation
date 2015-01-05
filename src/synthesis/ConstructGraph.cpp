@@ -190,7 +190,7 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
     VideoWriter outputVideo;
     //outputVideo.open(  , -1, 20, sizeT, true);
     // outputVideo.open("/home/mallikarjun/Desktop/test2.avi", CV_FOURCC('D','I','V','X'), 5, Size (200, 200), true );
-    outputVideo.open(videoOutput, CV_FOURCC('P','I','M','1'), 24, Size (200, 200), true );
+    outputVideo.open(videoOutput, CV_FOURCC('P','I','M','1'), 16, Size (200, 200), true );
     if (!outputVideo.isOpened())
     {
         perror("Could not open the output video for write");
@@ -239,7 +239,7 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, doub
     // Traverse the graph
     list<int> traverseList_g, traverseList_d;
 
-    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 20, noOfVertices); 
+    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 500, noOfVertices); 
     traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, outputLocation) ; 
 
     getVideo(traverseList_g, videoOutput_g, outputLocation);
