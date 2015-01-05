@@ -72,12 +72,11 @@ map<int, list < pair<int, double > > > getGraph(string edgeWeightsTxtName, int& 
     cout << "Building adjacencyList !" << endl;	
 
     ifstream edgeWeightPtr(edgeWeightsTxtName.c_str());
-    map<int, list < pair<int, double > > > adjacencyList;
 
     int                                                 vertexA, vertexB;
     double                                              edgeWeight;
     map<int, list < pair<int, double > > > adjacencyList;
-    int noOfVerticesLeft=0;
+    string line;
 
     cout << "Entered constructGraph: Reading edge weights and build the graph" << endl;
 
@@ -88,7 +87,6 @@ map<int, list < pair<int, double > > > getGraph(string edgeWeightsTxtName, int& 
         if(getline(edgeWeightPtr, line)) {
             try {
                 noOfVertices      = lexical_cast<int>(line);
-                noOfVerticesLeft  = noOfVertices;
             }
             catch(bad_lexical_cast const&) {
                 cout << "Error: input string was not valid:" << line << endl;
@@ -148,20 +146,22 @@ map<int, list < pair<int, double > > > getGraph(string edgeWeightsTxtName, int& 
     }
     else {
         cout << "Couldn't open " << edgeWeightsTxtName << endl;
-        return ;
+        return adjacencyList;
     }
 
 }
 
 void synthesizeVideo(const string outputLocation, map<int, list < pair<int, double > > > adjacencyList, int videoNumber, int noOfVertices, int vertex1, int vertex2) {
 
-    string videoOutput = "";
+    string videoOutput = "", line;
+    vector<string> stringVector;
+    list<int> traverseList;
 
     // Traverse the graph
     list<int> traverseList_g, traverseList_d;
 
-    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 20, noOfVerticesLeft); break;
-    traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, outputLocation) ; break;
+    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 20, noOfVertices); 
+    traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, outputLocation) ; 
 
     // Print the traverse route
     // cout << "Final traversal of Vertices and size" << traverseList.size() << endl;
@@ -235,22 +235,26 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, doub
 
 }
 
-void constructGraph(const std::string outputLocation, int numberOfVideos=1){
+void constructGraph(std::string outputLocation, int numberOfVideos){
     cout << "Entered constructGraph " << endl;
 
-    int noOfVertices;
+    int noOfVertices, noOfVideos = 10;
     string line;
     vector<string> stringVector;
     string edgeWeightsTxtName = outputLocation + "/edgeWeights.txt";
     map<int, list < pair<int, double > > > adjacencyList;
 
-    adjacencyList getGraph(edgeWeightsTxtName, noOfVertices);
+    adjacencyList = getGraph(edgeWeightsTxtName, noOfVertices);
+
+    if(adjacencyList.size() < 1) {
+        cout << "Graph is NULL !" << endl;
+    }
 
     for(int i=0; i<noOfVideos; i++) {
 
 	int vertex1 = rand() % noOfVertices;         
 	int vertex2 = rand() % noOfVertices;         
-        synthesizeVideo(outputLocation, i, adjacencyList, noOfVertices, vertex1, vertex2); 
+        synthesizeVideo(outputLocation, adjacencyList, i, noOfVertices, vertex1, vertex2); 
     }
 
 }

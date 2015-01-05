@@ -9,11 +9,13 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "ConstructGraph.hpp"
+// #include "ConstructGraph.hpp"
 
 using namespace std;
 using namespace cv;
 using namespace boost;
+
+void constructGraph(std::string outputLocation, int numberOfVideos);
 
 int main(int argc, char *argv[]) {
   

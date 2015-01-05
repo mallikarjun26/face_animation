@@ -1,17 +1,22 @@
-C=g++
-CFLAGS = `pkg-config --cflags opencv`
-LIBS = `pkg-config --libs opencv`
+CC=g++
+CFLAGS= -c -Wall
+CINC=`pkg-config --cflags opencv`
+LIBS=`pkg-config --libs opencv`
 
-all: top
+all: main 
 
-top: main.o ConstructGraph.o TravelDijkstra.o 
-	$(CC) $(CFLAGS) main.o ConstructGraph.o TravelDijkstra.o
+main: main.o ConstructGraph.o TraversalDijkstra.o 
+	$(CC)  main.o ConstructGraph.o TraversalDijkstra.o -o main $(LIBS)
 
 main.o: main.cpp
 	$(CC) $(CFLAGS) main.cpp
 
 ConstructGraph.o: ConstructGraph.cpp
-	$(CC) $(CFLAGS) ConstructGraph.cpp
+	$(CC) $(CFLAGS) $(CINC) ConstructGraph.cpp
 
-TravelDijkstra.o: TravelDijkstra.cpp
-	$(CC) $(CFLAGS) TravelDijkstra.cpp
+TraversalDijkstra.o: TraversalDijkstra.cpp
+	$(CC) $(CFLAGS) $(CINC) TraversalDijkstra.cpp
+
+clean:
+	rm -rf *o top 
+
