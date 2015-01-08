@@ -14,18 +14,16 @@ function post_processing(output_path)
     disp(['Processing ' int2str(i)  ' video']);
     
     video_path = [videos_path '/' videos_name(i).name];
-    video_obj  = VideoReader(video_path);
-    video_mat  = read(video_obj, Inf);
     
     %% Intensity normalization
-    intensity_normalization();
-
-
+    video_mat = intensity_normalization(video_path);
+    %dump_video(video_mat, '~/Downloads/intensity_normalized.avi');
+    
     %% Interpolation
-
-
+    video_mat = video_interpolation(video_mat);
 
     %% Face cropping
+    
   end
   
 
