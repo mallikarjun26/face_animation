@@ -13,7 +13,7 @@ function post_processing(output_path)
     
     disp(['Processing ' int2str(i)  ' video']);
     
-    video_path = [videos_path '/' videos_name(i).name];
+    video_path = [videos_path '/' videos_name(i).name]
     video_obj  = VideoReader(video_path);
     video_mat  = read(video_obj, Inf);
     
