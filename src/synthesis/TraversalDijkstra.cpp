@@ -79,20 +79,20 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 
 		// Build path for each fixed vertex
 		for (list<int>::iterator it = shortestPaths[prevFixedNodeList[nextHop]].begin(); it != shortestPaths[prevFixedNodeList[nextHop]].end(); it++) {
-			// cout << "Debug 22:: " << *it << endl;
+			cout << "Debug 22:: " << *it << endl;
 		    shortestPaths[nextHop].push_back(*it);
 		}
 		shortestPaths[nextHop].push_back(nextHop);
 
 		list < pair<int, double> >::iterator listIt = adjacencyList[nextHop].begin();
 		for(; listIt != adjacencyList[nextHop].end(); listIt++) {
-			//cout<< "Debug 11: for (*listIt).first:" << (*listIt).first << " (*listIt).second:" << (*listIt).second << "d[(*listIt).first]" << d[(*listIt).first] << endl;
+			cout<< "Debug 11: for (*listIt).first:" << (*listIt).first << " (*listIt).second:" << (*listIt).second << "d[(*listIt).first]" << d[(*listIt).first] << endl;
 			double prevMin = d[(*listIt).first];
 			double couldBeMin = d[nextHop] + (*listIt).second;
 			if( prevMin > couldBeMin) {
 				d[(*listIt).first] = couldBeMin;
 				Q.erase(make_pair(prevMin, (*listIt).first));
-				//cout << "Debug 11: Hop to be pushed:" << (*listIt).first << endl;
+				cout << "Debug 11: Hop to be pushed:" << (*listIt).first << endl;
 				Q.insert(make_pair(couldBeMin, (*listIt).first));
 				prevFixedNodeList[(*listIt).first] = nextHop;
 			}
@@ -106,14 +106,14 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 	// Print the shortest distance for each other vertex
 	for(int i=0; i<numberOfNodes; i++) {
 
-		//cout << "Shortest distance from source:" << src << " to vertex:" << i << " =" << d[i] << endl;
-		//cout << " Size: " << shortestPaths[i].size() << " Path taken: " ;
+		cout << "Shortest distance from source:" << src << " to vertex:" << i << " =" << d[i] << endl;
+		cout << " Size: " << shortestPaths[i].size() << " Path taken: " ;
 
 		traversalFilePtr << "Shortest distance from source:" << src << " to vertex:" << i << " =" << d[i] << endl;
 		traversalFilePtr << " Size: " << shortestPaths[i].size() << " Path taken: " ;
 
 		for(list<int>::iterator it = shortestPaths[i].begin(); it != shortestPaths[i].end(); it++){
-			//cout << *it << "-" ;
+			cout << *it << "-" ;
 			traversalFilePtr << *it << "-" ;
 		}
 		traversalFilePtr << endl;
