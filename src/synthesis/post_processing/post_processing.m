@@ -6,7 +6,7 @@ function post_processing(output_path)
   videos_path = [output_path '/videos'];
 
   videos_name = dir(videos_path);
-  videos_name = videos_name(3:size(videos_name,1),:);
+  videos_name = videos_name(4:size(videos_name,1),:);
   numberOfVideos = size(videos_name,1);
   
   for i=1:numberOfVideos
@@ -18,14 +18,14 @@ function post_processing(output_path)
     video_mat  = read(video_obj, Inf);
     
     %% Intensity normalization
-    intensity_normalization();
-
-
+    video_mat = intensity_normalization(video_path);
+    %dump_video(video_mat, '~/Downloads/intensity_normalized.avi');
+    
     %% Interpolation
-
-
+    video_mat = video_interpolation(video_mat);
 
     %% Face cropping
+    
   end
   
 
