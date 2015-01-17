@@ -56,7 +56,7 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 	int prevFixedNodeList[numberOfNodes];
 
 
-    cout << "numberOfNodes=" << numberOfNodes << " src=" << src << " dst=" << dst << endl; 
+    //cout << "numberOfNodes=" << numberOfNodes << " src=" << src << " dst=" << dst << endl; 
 
 	// Distance of all nodes from source
 	for(int i=0; i<numberOfNodes; i++){

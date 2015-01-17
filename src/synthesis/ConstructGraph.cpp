@@ -36,14 +36,14 @@ int findNextVertex(int currentVertex, map<int, list < pair<int, long double > > 
 
     it=adjacencyList[currentVertex].begin();
     for (; it!=adjacencyList[currentVertex].end(); ++it) {
-        cout << "(*it).second=" << (*it).second << " leastDist" << leastDist << endl;
+        //cout << "(*it).second=" << (*it).second << " leastDist" << leastDist << endl;
         if(((*it).second <= leastDist) && (adjacencyList[(*it).first].size() > 0) ){
             nextVertex  = (*it).first;
             leastDist   = (*it).second;
-            cout << "Debug ! nextVertex:" << nextVertex << " leastDist:" << leastDist << endl;
+            //cout << "Debug ! nextVertex:" << nextVertex << " leastDist:" << leastDist << endl;
         }
     }
-    cout << "Selected Debug ! nextVertex:" << nextVertex << " leastDist:" << lexical_cast<string>(leastDist) << endl;
+    //cout << "Selected Debug ! nextVertex:" << nextVertex << " leastDist:" << lexical_cast<string>(leastDist) << endl;
 
     adjacencyList[currentVertex].clear();
     noOfVerticesLeft--;
@@ -202,7 +202,7 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
     // cout << "Displaying the traversed faces" << endl;
     for(list<int>::iterator it=traverseList.begin(); it!=traverseList.end(); it++) {
         int faceNumber = *it;
-        cout << "DEBUG 88:: faceMap[i]=" << faceMap[faceNumber] << endl;
+        //cout << "DEBUG 88:: faceMap[i]=" << faceMap[faceNumber] << endl;
         string strTemp = outputLocation + "/faces/" +  faceMap[faceNumber];
         //cout << "DEBUG 77:: strTemp=" << strTemp << endl;
         //IplImage* img=cvLoadImage(strTemp.c_str());
