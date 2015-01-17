@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
 				track2 = frameShotMap[frame1];
 			}
 
-			//cout << "node1:" << node1 << " frame1:" << frame1 << " node2:" << node2 << " frame2:" << frame2 << " track1:" << track1 << " track2:" << track2 << " edgeWeight:" << edgeWeight << endl;
+			// cout << "node1:" << node1 << " frame1:" << frame1 << " node2:" << node2 << " frame2:" << frame2 << " track1:" << track1 << " track2:" << track2 << " edgeWeight:" << edgeWeight << endl;
 
 			// Mapping Shot of Shot info. First level shot number is less than or equal to second level shot number
 			if(trackNetwork.find(track1) != trackNetwork.end()){ // outer map is present
