@@ -1,4 +1,2 @@
-ESmain.m -> Takes 
-
-    1. ListOfFaces.txt
-    2. Checks for faces(frames) present in ListOfFaces in Frames and finds feature vectors.
+ESmain.m -> Creates featureVector.txt
+findCommonParts.m -> Finds common fiducial points in the face and finds the min distance
