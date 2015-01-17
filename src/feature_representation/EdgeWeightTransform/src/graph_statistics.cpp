@@ -31,17 +31,10 @@ public:
 */
 };
 
-int main(int argc, char *argv[]) {
+int get_across_track_min_weight_avg(string outputLocation) {
 
-	if(argc != 2) {
-		cout << "Number of arguments isn't correct \n";
-		return -1;
-	}
-	else {
-		cout << "Shots Network creation" << endl;
-	}
-
-	const string outputLocation       = argv[1];
+    float across_track_min_weight_avg=0;
+    int   number_of_across_track=0;
 
 	string LIST_OF_FACES_FILE = outputLocation + "/ListOfFaces.txt";
 	string EDGE_WEIGHTS_FILE  = outputLocation + "/edgeWeights.txt";
@@ -98,8 +91,9 @@ int main(int argc, char *argv[]) {
 	if(edgeWeightsPtr.is_open()) {
 
 		getline(edgeWeightsPtr,line);
-
+        //cout << line << endl;
 		while(getline(edgeWeightsPtr,line)) {
+            //cout << line << endl;
 			split(edgeWeightSplit, line, is_any_of("-="));
 			node1  = lexical_cast<int>(edgeWeightSplit[0]);
 			node2  = lexical_cast<int>(edgeWeightSplit[1]);
@@ -116,7 +110,7 @@ int main(int argc, char *argv[]) {
 				track2 = frameShotMap[frame1];
 			}
 
-			// cout << "node1:" << node1 << " frame1:" << frame1 << " node2:" << node2 << " frame2:" << frame2 << " track1:" << track1 << " track2:" << track2 << " edgeWeight:" << edgeWeight << endl;
+			//cout << "node1:" << node1 << " frame1:" << frame1 << " node2:" << node2 << " frame2:" << frame2 << " track1:" << track1 << " track2:" << track2 << " edgeWeight:" << edgeWeight << endl;
 
 			// Mapping Shot of Shot info. First level shot number is less than or equal to second level shot number
 			if(trackNetwork.find(track1) != trackNetwork.end()){ // outer map is present
@@ -186,10 +180,21 @@ int main(int argc, char *argv[]) {
 				(*inner_it).second = tempShot;
 
 				trackNetworkPtr << outerShotNumber << "-" << innerShotNumber << "=" << tempShot.min_dist << " " << tempShot.avg_dist << " " << tempShot.max_dist << tempShot.no_edges << endl;
+				//cout << outerShotNumber << "-" << innerShotNumber << "=" << tempShot.min_dist << " " << tempShot.avg_dist << " " << tempShot.max_dist << tempShot.no_edges << endl;
+
+                if(outerShotNumber != innerShotNumber) {
+                    number_of_across_track++;
+                    across_track_min_weight_avg += tempShot.min_dist;
+                }    
+
 			}
 		}
 	}
-
+    if(number_of_across_track) {
+        cout << "across_track_min_weight_avg = " << across_track_min_weight_avg << "number_of_across_track = " << number_of_across_track << endl;
+        across_track_min_weight_avg = across_track_min_weight_avg / number_of_across_track;
+        return (across_track_min_weight_avg);
+    }
 }
 
 

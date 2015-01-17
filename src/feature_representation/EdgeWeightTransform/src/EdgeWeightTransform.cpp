@@ -14,6 +14,8 @@
 #include <limits.h>
 #include <map>
 
+#include "graph_statistics.hpp"
+
 using namespace std;
 using namespace boost;
 
@@ -32,6 +34,9 @@ int main(int argc, char *argv[]) {
 	string EDGE_WEIGHTS_NAME = outputLocation + "/edgeWeights.txt";
 	string PRE_TRANSFORM_EDGE_WEIGHTS_NAME = outputLocation + "/preTransformEdgeWeights.txt";
 	string TRANSFORMED_EDGE_WEIGHTS_NAME = outputLocation + "/edgeWeights.txt";
+
+    float across_track_min_weight_avg = get_across_track_min_weight_avg(outputLocation);
+	cout << "across_track_min_weight_avg = " << across_track_min_weight_avg << endl;
 
 	int result = rename(EDGE_WEIGHTS_NAME.c_str(), PRE_TRANSFORM_EDGE_WEIGHTS_NAME.c_str());
 
@@ -55,14 +60,14 @@ int main(int argc, char *argv[]) {
 	getline(edgeWeightsPtr, line);
 	transformedEdgeWeightsPtr << line << endl;
 
-	cout << "Debug 0" << endl;
+
 	while(getline(edgeWeightsPtr, line)) {
 		split(lineSplit, line, is_any_of("="));
 		long double transformedEdgeWeight = lexical_cast<float>(lineSplit[1]);
 		//transformedEdgeWeight = 1000 * (1 / (1+exp(-(transformedEdgeWeight-26)/2)) );
 		//transformedEdgeWeight = exp(transformedEdgeWeight - 5);
-		transformedEdgeWeight = exp((4*transformedEdgeWeight) - 57);
-
+		//transformedEdgeWeight = exp((4*transformedEdgeWeight) - across_track_min_weight_avg);
+		transformedEdgeWeight = exp(4*(transformedEdgeWeight- across_track_min_weight_avg));
 		transformedEdgeWeightsPtr << lineSplit[0].c_str() << "=" << transformedEdgeWeight << endl;
 	}
 	transformedEdgeWeightsPtr.close();

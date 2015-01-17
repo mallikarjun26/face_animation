@@ -57,7 +57,7 @@ end
 % Call detect function and collect the part's bounding boxes and angle
 % Concatenate the (HOG)feature vectors for each of the bounding boxes
 % Dump the features in the file
-roiFileHandler = fopen( strcat(inputPath, '/ROI.txt'), 'r' );
+roiFileHandler = fopen( strcat(inputPath, '/ROI/ROI.txt'), 'r' );
 tLine = fgetl(roiFileHandler);
 featuresFileHandler = fopen( strcat(inputPath, '/featureVectors.txt'), 'w' );
 feat = [];
@@ -78,15 +78,9 @@ while ischar(tLine)
         disp(faceNo);
         frameNoList = strsplit(faceNo, delimiter_);
         frameNo = frameNoList{1};
-        %disp(frameNo);
+        disp(frameNo);
         imgName = strcat(inputPath, '/Frames/', frameNo, '.jpg');
         disp(imgName);
-%         disp(tLineSplit(2));
-%         disp(tLineSplit(3));
-%         disp(tLineSplit(4));
-%         disp(tLineSplit(5));
-%         disp(tLineSplit(6));
-%    
 
         im = imread(imgName);
         imagesc(im);
