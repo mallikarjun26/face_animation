@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
 
     // Initialization
     string outputLocation = argv[1];    
+    srand(time(0));
 
     constructGraph(outputLocation, 10);
 

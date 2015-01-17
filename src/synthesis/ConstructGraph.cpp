@@ -19,12 +19,12 @@ using namespace boost;
 using namespace cv;
 
 
-int findNextVertex(int currentVertex, map<int, list < pair<int, double > > > &adjacencyList, int &noOfVerticesLeft) {
+int findNextVertex(int currentVertex, map<int, list < pair<int, long double > > > &adjacencyList, int &noOfVerticesLeft) {
 
-    list< pair<int, double > >::iterator it=adjacencyList[currentVertex].begin();
+    list< pair<int, long double > >::iterator it=adjacencyList[currentVertex].begin();
 
     int nextVertex;
-    double  leastDist;
+    long double  leastDist;
 
     while(adjacencyList[(*it).first].size()==0) {
         it++;
@@ -32,16 +32,18 @@ int findNextVertex(int currentVertex, map<int, list < pair<int, double > > > &ad
     nextVertex   = (*it).first;
     leastDist  = (*it).second;
 
-    // cout << "Debug ! nextVertex:" << nextVertex << " leastDist:" << leastDist << endl;
+    //cout << "Debug ! nextVertex:" << nextVertex << " leastDist:" << leastDist << endl;
 
     it=adjacencyList[currentVertex].begin();
     for (; it!=adjacencyList[currentVertex].end(); ++it) {
+        cout << "(*it).second=" << (*it).second << " leastDist" << leastDist << endl;
         if(((*it).second <= leastDist) && (adjacencyList[(*it).first].size() > 0) ){
             nextVertex  = (*it).first;
             leastDist   = (*it).second;
-            // cout << "Debug nextVertex:" << nextVertex << endl;
+            cout << "Debug ! nextVertex:" << nextVertex << " leastDist:" << leastDist << endl;
         }
     }
+    cout << "Selected Debug ! nextVertex:" << nextVertex << " leastDist:" << lexical_cast<string>(leastDist) << endl;
 
     adjacencyList[currentVertex].clear();
     noOfVerticesLeft--;
@@ -49,7 +51,7 @@ int findNextVertex(int currentVertex, map<int, list < pair<int, double > > > &ad
     return(nextVertex);
 }
 
-void traversalGreedyNextHop(map< int, list < pair<int, double > > > &adjacencyList, list<int> &traverseList, int currentVertex, int numberOfHops, int noOfVerticesLeft) {
+void traversalGreedyNextHop(map< int, list < pair<int, long double > > > &adjacencyList, list<int> &traverseList, int currentVertex, int numberOfHops, int noOfVerticesLeft) {
 
 	cout << "Entered traversalGreedyNextHop " << endl;
 	traverseList.push_back(currentVertex);
@@ -67,15 +69,15 @@ void traversalGreedyNextHop(map< int, list < pair<int, double > > > &adjacencyLi
     }
 }
 
-map<int, list < pair<int, double > > > getGraph(string edgeWeightsTxtName, int& noOfVertices) {
+map<int, list < pair<int, long double > > > getGraph(string edgeWeightsTxtName, int& noOfVertices) {
 
     cout << "Building adjacencyList !" << endl;	
 
     ifstream edgeWeightPtr(edgeWeightsTxtName.c_str());
 
     int                                                 vertexA, vertexB;
-    double                                              edgeWeight;
-    map<int, list < pair<int, double > > > adjacencyList;
+    long double                                              edgeWeight;
+    map<int, list < pair<int, long double > > > adjacencyList;
     string line;
 
     // Open the file to read all the edge weights.
@@ -95,43 +97,42 @@ map<int, list < pair<int, double > > > getGraph(string edgeWeightsTxtName, int& 
         int lineCount =1;
         while(getline(edgeWeightPtr, line)) {
 			//cout << line << endl;
-        	vector<string> stringVector;
-			split(stringVector, line, boost::is_any_of("-="));
-			// Adding edges and weights
+        	vector<string> stringVector, stringVector_1;
+
 			try {
-				//cout << "Debug 00:: " << stringVector[0].c_str() << " " << stringVector[1].c_str() << " " << stringVector[2].c_str() << endl;
+			    split(stringVector, line, boost::is_any_of("="));
 
-				if(stringVector.size() == 4) {
-					stringVector[2] = stringVector[2] + stringVector[3];
-				}
+			    edgeWeight = lexical_cast<long double >(stringVector[1].c_str());
 
-				vertexA = lexical_cast<int>(stringVector[0].c_str());
-				vertexB = lexical_cast<int>(stringVector[1].c_str());
-				edgeWeight = lexical_cast<double >(stringVector[2].c_str());
-				//cout << "vertexA=" << vertexA << " vertexB=" << vertexB << " edgeWeight=" << edgeWeight << endl;
+			    split(stringVector_1, stringVector[0], boost::is_any_of("-"));
+                
+			    vertexA = lexical_cast<int>(stringVector_1[0].c_str());
+			    vertexB = lexical_cast<int>(stringVector_1[1].c_str());
+			    
+                //cout << "vertexA=" << vertexA << " vertexB=" << vertexB << " edgeWeight=" << edgeWeight << endl;
 			}
 			catch (bad_lexical_cast const&) {
 				cout << "Error: input string was not valid" << line  << endl;
 			}
 
 			if(adjacencyList.find(vertexA) != adjacencyList.end()){
-				list < pair<int, double > > tempList = adjacencyList[vertexA];
+				list < pair<int, long double > > tempList = adjacencyList[vertexA];
 				tempList.push_back(make_pair(vertexB, edgeWeight));
 				adjacencyList[vertexA] = tempList;
 			}
 			else{
-				list < pair<int, double > > tempList;
+				list < pair<int, long double > > tempList;
 				tempList.push_back(make_pair(vertexB, edgeWeight));
 				adjacencyList[vertexA] =  tempList;
 			}
 
 			if(adjacencyList.find(vertexB) != adjacencyList.end()){
-				list < pair<int, double > > tempList = adjacencyList[vertexB];
+				list < pair<int, long double > > tempList = adjacencyList[vertexB];
 				tempList.push_back(make_pair(vertexA, edgeWeight));
 				adjacencyList[vertexB] = tempList;
 			}
 			else{
-				list < pair<int, double > > tempList;
+				list < pair<int, long double > > tempList;
 				tempList.push_back(make_pair(vertexA, edgeWeight));
 				adjacencyList[vertexB] =  tempList;
 			}
@@ -140,7 +141,8 @@ map<int, list < pair<int, double > > > getGraph(string edgeWeightsTxtName, int& 
 				cout << "Here I'm in the loop of getting edgeWeights " << lineCount << "/" << noOfVertices << endl;
 			lineCount++;
         }
-	return adjacencyList;
+        //cout << "while returning adjacencyList[3].size()=" << adjacencyList[3].size() << endl;
+	    return adjacencyList;
     }
     else {
         cout << "Couldn't open " << edgeWeightsTxtName << endl;
@@ -200,7 +202,7 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
     // cout << "Displaying the traversed faces" << endl;
     for(list<int>::iterator it=traverseList.begin(); it!=traverseList.end(); it++) {
         int faceNumber = *it;
-        //cout << "DEBUG 88:: faceMap[i]=" << faceMap[faceNumber] << endl;
+        cout << "DEBUG 88:: faceMap[i]=" << faceMap[faceNumber] << endl;
         string strTemp = outputLocation + "/faces/" +  faceMap[faceNumber];
         //cout << "DEBUG 77:: strTemp=" << strTemp << endl;
         //IplImage* img=cvLoadImage(strTemp.c_str());
@@ -228,7 +230,7 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
 }
 
 
-void synthesizeVideo(const string outputLocation, map<int, list < pair<int, double > > > adjacencyList, int videoNumber, int noOfVertices, int vertex1, int vertex2) {
+void synthesizeVideo(const string outputLocation, map<int, list < pair<int, long double > > > adjacencyList, int videoNumber, int noOfVertices, int vertex1, int vertex2) {
 
     string videoOutput_g = outputLocation + "/videos/" + "greedNextHop_" + to_string(videoNumber) + ".avi";
     string videoOutput_d = outputLocation + "/videos/" + "dijkstra_" + to_string(videoNumber) + ".avi";
@@ -239,8 +241,8 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, doub
     // Traverse the graph
     list<int> traverseList_g, traverseList_d;
 
-    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 500, noOfVertices); 
     traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, outputLocation) ; 
+    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 500, noOfVertices); 
 
     getVideo(traverseList_g, videoOutput_g, outputLocation);
     getVideo(traverseList_d, videoOutput_d, outputLocation);
@@ -254,7 +256,7 @@ void constructGraph(std::string outputLocation, int numberOfVideos){
     string line;
     vector<string> stringVector;
     string edgeWeightsTxtName = outputLocation + "/edgeWeights.txt";
-    map<int, list < pair<int, double > > > adjacencyList;
+    map<int, list < pair<int, long double > > > adjacencyList;
 
     adjacencyList = getGraph(edgeWeightsTxtName, noOfVertices);
 
