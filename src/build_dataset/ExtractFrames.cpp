@@ -11,6 +11,7 @@
 #include "boost/filesystem.hpp"
 #include <boost/lexical_cast.hpp>
 #include "opencv2/objdetect/objdetect.hpp"
+#include <map>
 
 #include <fstream>
 
@@ -97,7 +98,7 @@ void extractFrames(const string videoLocation, const string outputLocation, cons
             return;
         }
 
-        cout << "Frame Number: " << frameNumber << endl;
+        //cout << "Frame Number: " << frameNumber << endl;
         //imshow(FRAME_DISPLAY, frameReference);
 
         if(frameMap.find(frameNumber) != frameMap.end()){
