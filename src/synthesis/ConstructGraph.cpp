@@ -251,10 +251,11 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, long
     list<int> traverseList_g, traverseList_d;
     list<long double> traverseDistanceList_g, traverseDistanceList_d;
 
-    traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, traverseDistanceList_d, outputLocation) ; 
     traversalGreedyNextHop(adjacencyList, traverseList_g, traverseDistanceList_g, vertex1, 500, noOfVertices); 
+    traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, traverseDistanceList_d, outputLocation) ; 
 
-    //cout << "traverseDistanceList_d=" << traverseDistanceList_d.size() << " traverseDistanceList_g=" << traverseDistanceList_g.size() << endl; 
+    cout << "traverseDistanceList_d=" << traverseDistanceList_d.size() << " traverseDistanceList_g=" << traverseDistanceList_g.size() << endl; 
+    cout << "traverseList_d=" << traverseList_d.size() << " traverseList_g=" << traverseList_g.size() << endl; 
 
     getVideo(traverseList_g, traverseDistanceList_g, videoOutput_g, outputLocation);
     getVideo(traverseList_d, traverseDistanceList_d, videoOutput_d, outputLocation);

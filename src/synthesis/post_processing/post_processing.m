@@ -4,6 +4,7 @@ function post_processing(output_path)
 
   % Initialization
   videos_path = [output_path '/videos'];
+  output_videos_path = [output_path '/interpolated_videos'];
   avi_videos_path = fullfile([output_path '/videos/*.avi']);
 
   videos_name = dir(avi_videos_path);
@@ -15,13 +16,22 @@ function post_processing(output_path)
     
     video_path = [videos_path '/' videos_name(i).name];
     
+    try
+        video_obj  = VideoReader(video_path);
+    catch
+        disp('An error occurred while retrieving information from the internet.');
+        disp('Execution will continue.');
+        continue;
+    end
+        
     %% Intensity normalization
-    video_mat = intensity_normalization(video_path);
+    video_mat = intensity_normalization(video_obj);
     %dump_video(video_mat, '~/Downloads/intensity_normalized.avi');
     
     %% Interpolation
     interpolated_video_mat = video_interpolation(video_mat, video_path);
-    dump_video(interpolated_video_mat, '~/Downloads/interpolated_normalized.avi');
+    output_video_path = [output_videos_path '/' videos_name(i).name];
+    dump_video(interpolated_video_mat, output_video_path);
     
     %% Face cropping
     
