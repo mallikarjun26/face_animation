@@ -59,16 +59,15 @@ void traversalGreedyNextHop(map< int, list < pair<int, long double > > > &adjace
     long double nextHopDistance;
 
 	int nextVertex = findNextVertex(currentVertex, adjacencyList, noOfVerticesLeft, nextHopDistance);
-    traverseDistanceList.push_back(nextHopDistance);
 	// cout << "Debug 44:: Next Vertex" << nextVertex << "adjacencyList size:" << adjacencyList.size() << endl;
 
 	int debugWhile = 0;
 	while((noOfVerticesLeft!=1) && (numberOfHops > 1)){
         // cout << "Debug 55:: Inside while. Next Vertex:: " << nextVertex << " VerticesLeft:: " << noOfVerticesLeft << " debugWhile::" << debugWhile << endl;
         traverseList.push_back(nextVertex);
+        traverseDistanceList.push_back(nextHopDistance);
         currentVertex = nextVertex;
         nextVertex = findNextVertex(currentVertex, adjacencyList, noOfVerticesLeft, nextHopDistance);
-        traverseDistanceList.push_back(nextHopDistance);
         debugWhile++;
 	numberOfHops--;
     }
@@ -203,8 +202,8 @@ void getVideo(list<int> traverseList, list<long double> traverseDistanceList, st
     bool firstTime_bool = true;
     // cout << "Displaying the traversed faces" << endl;
     int i=0;
+    //cout << "traverseList.size()=" << traverseList.size() << endl;
     for(list<int>::iterator it=traverseList.begin(); it!=traverseList.end(); it++) {
-        cout << "debug number=" << i++ << endl;
         int faceNumber = *it;
         //cout << "DEBUG 88:: faceMap[i]=" << faceMap[faceNumber] << endl;
         string strTemp = outputLocation + "/faces/" +  faceMap[faceNumber];
@@ -212,6 +211,7 @@ void getVideo(list<int> traverseList, list<long double> traverseDistanceList, st
         //IplImage* img=cvLoadImage(strTemp.c_str());
         faceMat = imread(strTemp.c_str(), CV_LOAD_IMAGE_COLOR);
         if(!firstTime_bool){
+            //cout << "debug number=" << i << endl;
             //addWeighted(prevMat, 0.5, faceMat, 0.5, 0, midMat, -1);
             //putText(midMat, "Bridge Image", cvPoint(30,30), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);
             //outputVideo << midMat;
@@ -221,6 +221,7 @@ void getVideo(list<int> traverseList, list<long double> traverseDistanceList, st
             traverseDistanceList.pop_front();
         }
         else{
+            //cout << "debug number=" << i << endl;
             putText(faceMat, faceMap[faceNumber].c_str(), cvPoint(30,30), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);
             outputVideo << faceMat;
             firstTime_bool = false;
@@ -231,6 +232,7 @@ void getVideo(list<int> traverseList, list<long double> traverseDistanceList, st
         //cvWriteFrame(writer,img);
         //imshow(EXPRESSION_DISPLAY, faceMat);
         cvWaitKey(10);
+        i++;
     }
     traverse_hop_distance_ptr.close();
  
@@ -252,7 +254,7 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, long
     traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, traverseDistanceList_d, outputLocation) ; 
     traversalGreedyNextHop(adjacencyList, traverseList_g, traverseDistanceList_g, vertex1, 500, noOfVertices); 
 
-    cout << "traverseDistanceList_d=" << traverseDistanceList_d.size() << " traverseDistanceList_g=" << traverseDistanceList_g.size() << endl; 
+    //cout << "traverseDistanceList_d=" << traverseDistanceList_d.size() << " traverseDistanceList_g=" << traverseDistanceList_g.size() << endl; 
 
     getVideo(traverseList_g, traverseDistanceList_g, videoOutput_g, outputLocation);
     getVideo(traverseList_d, traverseDistanceList_d, videoOutput_d, outputLocation);
