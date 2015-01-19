@@ -73,7 +73,6 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 	Q.insert(make_pair(0,src));
 	prevFixedNodeList[src] = src;
     prevFixedNodeListDistance[src] = 0;
-    traverseList.push_back(src);
 
 	while(Q.size()!=0) {
 		long double minDist = Q.begin()->first;
@@ -84,16 +83,22 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 		S.push_back(make_pair(nextHop, minDist));
 
 		// Build path for each fixed vertex
+        bool first_time_loop = true;
 		for (list< pair<int, long double> >::iterator it = shortestPaths[prevFixedNodeList[nextHop]].begin(); it != shortestPaths[prevFixedNodeList[nextHop]].end(); it++) {
 			//cout << "Debug 22:: " << *it << endl;
 		    shortestPaths[nextHop].push_back(make_pair((*it).first, (*it).second));
             if(nextHop == dst) {
+                //cout << (*it).first << endl;
                 traverseList.push_back((*it).first);
-                traverseDistanceList.push_back((*it).second);
+                if(first_time_loop == false){
+                    traverseDistanceList.push_back((*it).second);
+                }
+                first_time_loop = false;
             }
 		}
 		shortestPaths[nextHop].push_back(make_pair(nextHop, prevFixedNodeListDistance[nextHop]));
         if(nextHop == dst) {
+            //cout << nextHop << endl;
             traverseList.push_back(nextHop);
             traverseDistanceList.push_back(prevFixedNodeListDistance[nextHop]);
         }

@@ -13,7 +13,7 @@ function post_processing(output_path)
     
     disp(['Processing ' int2str(i)  ' video']);
     
-    video_path = [videos_path '/' videos_name(i).name]
+    video_path = [videos_path '/' videos_name(i).name];
     
     %% Intensity normalization
     video_mat = intensity_normalization(video_path);
