@@ -1,9 +1,8 @@
-function [video_mat] = intensity_normalization(video_path) 
-
-  video_obj  = VideoReader(video_path);
+function [video_mat] = intensity_normalization(video_obj) 
+  
   video_mat  = read(video_obj, [1 Inf]);
   if(size(video_mat, 3) ~= 3)
-    error([video_path 'is not a color video! Please provide a color video']);
+    error(['Video is not a color video! Please provide a color video']);
   end
   
   frame_size_x    = size(video_mat, 1);
