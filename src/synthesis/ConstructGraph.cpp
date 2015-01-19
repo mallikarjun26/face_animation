@@ -19,7 +19,7 @@ using namespace boost;
 using namespace cv;
 
 
-int findNextVertex(int currentVertex, map<int, list < pair<int, long double > > > &adjacencyList, int &noOfVerticesLeft) {
+int findNextVertex(int currentVertex, map<int, list < pair<int, long double > > > &adjacencyList, int &noOfVerticesLeft, long double &nextHopDistance) {
 
     list< pair<int, long double > >::iterator it=adjacencyList[currentVertex].begin();
 
@@ -44,6 +44,7 @@ int findNextVertex(int currentVertex, map<int, list < pair<int, long double > > 
         }
     }
     //cout << "Selected Debug ! nextVertex:" << nextVertex << " leastDist:" << lexical_cast<string>(leastDist) << endl;
+    nextHopDistance = leastDist;
 
     adjacencyList[currentVertex].clear();
     noOfVerticesLeft--;
@@ -51,11 +52,14 @@ int findNextVertex(int currentVertex, map<int, list < pair<int, long double > > 
     return(nextVertex);
 }
 
-void traversalGreedyNextHop(map< int, list < pair<int, long double > > > &adjacencyList, list<int> &traverseList, int currentVertex, int numberOfHops, int noOfVerticesLeft) {
+void traversalGreedyNextHop(map< int, list < pair<int, long double > > > &adjacencyList, list<int> &traverseList, list<long double> &traverseDistanceList, int currentVertex, int numberOfHops, int noOfVerticesLeft) {
 
 	cout << "Entered traversalGreedyNextHop " << endl;
 	traverseList.push_back(currentVertex);
-	int nextVertex = findNextVertex(currentVertex, adjacencyList, noOfVerticesLeft);
+    long double nextHopDistance;
+
+	int nextVertex = findNextVertex(currentVertex, adjacencyList, noOfVerticesLeft, nextHopDistance);
+    traverseDistanceList.push_back(nextHopDistance);
 	// cout << "Debug 44:: Next Vertex" << nextVertex << "adjacencyList size:" << adjacencyList.size() << endl;
 
 	int debugWhile = 0;
@@ -63,7 +67,8 @@ void traversalGreedyNextHop(map< int, list < pair<int, long double > > > &adjace
         // cout << "Debug 55:: Inside while. Next Vertex:: " << nextVertex << " VerticesLeft:: " << noOfVerticesLeft << " debugWhile::" << debugWhile << endl;
         traverseList.push_back(nextVertex);
         currentVertex = nextVertex;
-        nextVertex = findNextVertex(currentVertex, adjacencyList, noOfVerticesLeft);
+        nextVertex = findNextVertex(currentVertex, adjacencyList, noOfVerticesLeft, nextHopDistance);
+        traverseDistanceList.push_back(nextHopDistance);
         debugWhile++;
 	numberOfHops--;
     }
@@ -151,11 +156,13 @@ map<int, list < pair<int, long double > > > getGraph(string edgeWeightsTxtName, 
 
 }
 
-void getVideo(list<int> traverseList, string videoOutput, string outputLocation) {
+void getVideo(list<int> traverseList, list<long double> traverseDistanceList, string videoOutput, string outputLocation) {
 
+    string videoOutput_path              = videoOutput + ".avi";
+    string traverse_hop_distance_path    = videoOutput + "_hop_distances.txt";
     string line;
     vector<string> stringVector;
-
+    ofstream traverse_hop_distance_ptr(traverse_hop_distance_path.c_str());
 
     // Print the traverse route
     // cout << "Final traversal of Vertices and size" << traverseList.size() << endl;
@@ -185,14 +192,9 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
     //namedWindow(EXPRESSION_DISPLAY, CV_WINDOW_AUTOSIZE);
 
     // Display the traversed faces and make a video of the same
-    Size sizeT(200, 200);
-    const string NAME = "Animation.avi";
-    //cout << "DEBUG 11: " << NAME << endl;
-
     VideoWriter outputVideo;
-    //outputVideo.open(  , -1, 20, sizeT, true);
     // outputVideo.open("/home/mallikarjun/Desktop/test2.avi", CV_FOURCC('D','I','V','X'), 5, Size (200, 200), true );
-    outputVideo.open(videoOutput, CV_FOURCC('P','I','M','1'), 24, Size (200, 200), true );
+    outputVideo.open(videoOutput_path, CV_FOURCC('P','I','M','1'), 24, Size (200, 200), true );
     if (!outputVideo.isOpened())
     {
         perror("Could not open the output video for write");
@@ -200,7 +202,9 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
 
     bool firstTime_bool = true;
     // cout << "Displaying the traversed faces" << endl;
+    int i=0;
     for(list<int>::iterator it=traverseList.begin(); it!=traverseList.end(); it++) {
+        cout << "debug number=" << i++ << endl;
         int faceNumber = *it;
         //cout << "DEBUG 88:: faceMap[i]=" << faceMap[faceNumber] << endl;
         string strTemp = outputLocation + "/faces/" +  faceMap[faceNumber];
@@ -208,11 +212,13 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
         //IplImage* img=cvLoadImage(strTemp.c_str());
         faceMat = imread(strTemp.c_str(), CV_LOAD_IMAGE_COLOR);
         if(!firstTime_bool){
-            addWeighted(prevMat, 0.5, faceMat, 0.5, 0, midMat, -1);
+            //addWeighted(prevMat, 0.5, faceMat, 0.5, 0, midMat, -1);
             //putText(midMat, "Bridge Image", cvPoint(30,30), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);
-            outputVideo << midMat;
+            //outputVideo << midMat;
             putText(faceMat, faceMap[faceNumber].c_str(), cvPoint(30,30), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);
             outputVideo << faceMat;
+            traverse_hop_distance_ptr << traverseDistanceList.front() << " ";
+            traverseDistanceList.pop_front();
         }
         else{
             putText(faceMat, faceMap[faceNumber].c_str(), cvPoint(30,30), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);
@@ -226,26 +232,30 @@ void getVideo(list<int> traverseList, string videoOutput, string outputLocation)
         //imshow(EXPRESSION_DISPLAY, faceMat);
         cvWaitKey(10);
     }
+    traverse_hop_distance_ptr.close();
  
 }
 
 
 void synthesizeVideo(const string outputLocation, map<int, list < pair<int, long double > > > adjacencyList, int videoNumber, int noOfVertices, int vertex1, int vertex2) {
 
-    string videoOutput_g = outputLocation + "/videos/" + "greedNextHop_" + to_string(videoNumber) + ".avi";
-    string videoOutput_d = outputLocation + "/videos/" + "dijkstra_" + to_string(videoNumber) + ".avi";
+    string videoOutput_g = outputLocation + "/videos/" + "greedNextHop_" + to_string(videoNumber);
+    string videoOutput_d = outputLocation + "/videos/" + "dijkstra_" + to_string(videoNumber);
     string line;
     vector<string> stringVector;
     list<int> traverseList;
 
     // Traverse the graph
     list<int> traverseList_g, traverseList_d;
+    list<long double> traverseDistanceList_g, traverseDistanceList_d;
 
-    traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, outputLocation) ; 
-    traversalGreedyNextHop(adjacencyList, traverseList_g, vertex1, 500, noOfVertices); 
+    traversalDijkstra(noOfVertices, vertex1, vertex2, adjacencyList, traverseList_d, traverseDistanceList_d, outputLocation) ; 
+    traversalGreedyNextHop(adjacencyList, traverseList_g, traverseDistanceList_g, vertex1, 500, noOfVertices); 
 
-    getVideo(traverseList_g, videoOutput_g, outputLocation);
-    getVideo(traverseList_d, videoOutput_d, outputLocation);
+    cout << "traverseDistanceList_d=" << traverseDistanceList_d.size() << " traverseDistanceList_g=" << traverseDistanceList_g.size() << endl; 
+
+    getVideo(traverseList_g, traverseDistanceList_g, videoOutput_g, outputLocation);
+    getVideo(traverseList_d, traverseDistanceList_d, videoOutput_d, outputLocation);
 
 }
 

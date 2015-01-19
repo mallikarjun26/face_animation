@@ -46,14 +46,15 @@ struct ComparePair {
     cout << "Debug 00:: *(adjacencyList[0].begin).first: " << (*adjacencyList[0].begin()).first << endl;
 */
 
-void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pair<int, long double> > > adjacencyList, list<int> &traverseList, const string outputLocation) {
+void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pair<int, long double> > > adjacencyList, list<int> &traverseList, list<long double> &traverseDistanceList, const string outputLocation) {
 
 	set< pair<long double,int> >                             Q;
 	vector< long double >                                    d(numberOfNodes);
 	list< pair<int, long double> >                           S;                           // pair<node, minDistance>
 
-	vector< list<int> > shortestPaths(numberOfNodes);
+	vector< list< pair<int, long double> > > shortestPaths(numberOfNodes);
 	int prevFixedNodeList[numberOfNodes];
+	long double prevFixedNodeListDistance[numberOfNodes];
 
 
     //cout << "numberOfNodes=" << numberOfNodes << " src=" << src << " dst=" << dst << endl; 
@@ -71,6 +72,8 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 	// Dijkstra Algorithm
 	Q.insert(make_pair(0,src));
 	prevFixedNodeList[src] = src;
+    prevFixedNodeListDistance[src] = 0;
+    traverseList.push_back(src);
 
 	while(Q.size()!=0) {
 		long double minDist = Q.begin()->first;
@@ -81,11 +84,19 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 		S.push_back(make_pair(nextHop, minDist));
 
 		// Build path for each fixed vertex
-		for (list<int>::iterator it = shortestPaths[prevFixedNodeList[nextHop]].begin(); it != shortestPaths[prevFixedNodeList[nextHop]].end(); it++) {
+		for (list< pair<int, long double> >::iterator it = shortestPaths[prevFixedNodeList[nextHop]].begin(); it != shortestPaths[prevFixedNodeList[nextHop]].end(); it++) {
 			//cout << "Debug 22:: " << *it << endl;
-		    shortestPaths[nextHop].push_back(*it);
+		    shortestPaths[nextHop].push_back(make_pair((*it).first, (*it).second));
+            if(nextHop == dst) {
+                traverseList.push_back((*it).first);
+                traverseDistanceList.push_back((*it).second);
+            }
 		}
-		shortestPaths[nextHop].push_back(nextHop);
+		shortestPaths[nextHop].push_back(make_pair(nextHop, prevFixedNodeListDistance[nextHop]));
+        if(nextHop == dst) {
+            traverseList.push_back(nextHop);
+            traverseDistanceList.push_back(prevFixedNodeListDistance[nextHop]);
+        }
 
 		list < pair<int, long double> >::iterator listIt = adjacencyList[nextHop].begin();
         //cout << "adjacencyList[3].size()=" << adjacencyList[3].size() << endl;
@@ -99,6 +110,7 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 				//cout << "Debug 11: Hop to be pushed:" << (*listIt).first << endl;
 				Q.insert(make_pair(couldBeMin, (*listIt).first));
 				prevFixedNodeList[(*listIt).first] = nextHop;
+				prevFixedNodeListDistance[(*listIt).first] = (*listIt).second;
 			}
 		}
 	}
@@ -108,7 +120,6 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
     traversalFilePtr.open(traversalFileName.c_str());
 
 	// Print the shortest distance for each other vertex
-    traverseList.push_back(src);
 	for(int i=0; i<numberOfNodes; i++) {
 
 		//cout << "Shortest distance from source:" << src << " to vertex:" << i << " =" << d[i] << endl;
@@ -117,11 +128,9 @@ void traversalDijkstra(int numberOfNodes, int src, int dst, map< int, list < pai
 		traversalFilePtr << "Shortest distance from source:" << src << " to vertex:" << i << " =" << d[i] << endl;
 		traversalFilePtr << " Size: " << shortestPaths[i].size() << " Path taken: " ;
 
-		for(list<int>::iterator it = shortestPaths[i].begin(); it != shortestPaths[i].end(); it++){
+		for(list< pair<int, long double> >::iterator it = shortestPaths[i].begin(); it != shortestPaths[i].end(); it++){
 			//cout << *it << "-" ;
-            if(i==dst)
-                traverseList.push_back(*it);
-			traversalFilePtr << *it << "-" ;
+			traversalFilePtr << (*it).first << "-" ;
 		}
 		traversalFilePtr << endl;
 	}

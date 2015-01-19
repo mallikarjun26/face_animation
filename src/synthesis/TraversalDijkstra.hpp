@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void traversalDijkstra(int numberOfNodes, int src, int dst, map<int, list < pair<int, long double> > > adjacencyList, list<int> &traverseList, const string outputLocation);
+void traversalDijkstra(int numberOfNodes, int src, int dst, map<int, list < pair<int, long double> > > adjacencyList, list<int> &traverseList, list<long double> &traverseDistanceList_d, const string outputLocation);
 
 
 #endif /* TRAVERSALDIJKSTRA_HPP_ */
