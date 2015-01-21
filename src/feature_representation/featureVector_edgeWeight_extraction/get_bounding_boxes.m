@@ -92,7 +92,7 @@ function get_bounding_boxes(inputPath)
             disp(size(im));
             disp('Calling detect function on bounded image');
             bs = detect(im, model, model.thresh);
-            bs = clipboxes(im, bs);
+            bs = clipboxes(im, bs.xy);
             bs = nms_face(bs,0.3);
 
             if(~isempty(bs))
