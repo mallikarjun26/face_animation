@@ -61,13 +61,10 @@ function get_bounding_boxes(inputPath)
         if(isKey(mapOfFaces, tLineSplit(1)))
             count = count +1;
             faceNo =  tLineSplit{1};
-            disp(faceNo);
             frameNoList = strsplit(faceNo, delimiter_);
             frameNo = frameNoList{1};
-            disp(frameNo);
             imgName = strcat(inputPath, '/Frames/', frameNo, '.jpg')
-            disp(imgName);
-
+            
             im = imread(imgName);
             imagesc(im);
             x1_o =  str2num(tLineSplit{2});
@@ -87,12 +84,7 @@ function get_bounding_boxes(inputPath)
 
             ROWS = [y1 y2];
             COLS   = [x1 x2];
-            %disp(imgName{1});
-            %im = imread(imgName{1}, 'PixelRegion', {ROWS, COLS});
-
-            %disp(size(im));
-            %disp(x1);disp(x2);disp(y1);disp(y2);
-
+            
             im = im(y1:y2, x1:x2, :);
             im = imresize(im, [200 200]);
             imagesc(im);
@@ -104,7 +96,7 @@ function get_bounding_boxes(inputPath)
             bs = nms_face(bs,0.3);
 
             if(~isempty(bs))
-                node_number = uint8(str2num(faceNo))
+                node_number = uint8(mapOfFaces(faceNo)) + uint8(1);
                 bounding_boxes{node_number} = bs;
             end
 
