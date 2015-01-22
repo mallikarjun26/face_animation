@@ -97,7 +97,7 @@ function get_bounding_boxes(inputPath)
 
             if(~isempty(bs))
                 node_number = uint32(mapOfFaces(faceNo)) + uint32(1);
-                bounding_boxes{node_number} = bs.xy;
+                bounding_boxes{node_number} = bs;
             end
 
         end
