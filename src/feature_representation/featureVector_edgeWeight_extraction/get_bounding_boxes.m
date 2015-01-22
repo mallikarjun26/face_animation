@@ -96,7 +96,7 @@ function get_bounding_boxes(inputPath)
             bs = nms_face(bs,0.3);
 
             if(~isempty(bs))
-                node_number = uint32(mapOfFaces(faceNo)) + uint8(1);
+                node_number = uint32(mapOfFaces(faceNo)) + uint32(1);
                 bounding_boxes{node_number} = bs.xy;
             end
 
