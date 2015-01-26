@@ -1,3 +1,5 @@
+// Builds the histogram of edge weights in the graph
+
 function edge_weight_histogram(output_path)
 
     edge_weights_file = [output_path '/edgeWeights.txt'];
