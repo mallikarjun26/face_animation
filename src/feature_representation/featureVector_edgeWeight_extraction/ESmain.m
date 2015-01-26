@@ -1,3 +1,5 @@
+// Builds feature vector for each of the faces. Finds fiducial points and provides LBP feature vectors for each of the fiducial parts in featureVectors.txt
+
 function [featureVectors, bs] = ESmain(inputPath)
 
 % compile.m should work for Linux and Mac.
