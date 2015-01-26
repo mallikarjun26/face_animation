@@ -1,3 +1,5 @@
+// Rank of video in 3D. Also factorization based on SVD and transfering few features across videos.
+
 function [video_quality_1, video_quality_2] = main(inputPath_1, inputPath_2, mode)
 
     %% Optimization possibilities
