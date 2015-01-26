@@ -1,3 +1,7 @@
+// This one scales the edge weights of the graph exponentially based on average minimum weights across tracks/shots
+
+
+
 //============================================================================
 // Name        : EdgeWeightTransform.cpp
 // Author      : 
