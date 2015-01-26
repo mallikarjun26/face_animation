@@ -1,3 +1,6 @@
+// This file extracts faces from a video.
+// Once manually sorted with a single person's faces, it extracts frames and builds the ListOfFaces.txt which gives mapping of node and image file name.
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>

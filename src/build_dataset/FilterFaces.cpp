@@ -1,3 +1,5 @@
+// Removes faces which are less than some resolution from the lot.
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>

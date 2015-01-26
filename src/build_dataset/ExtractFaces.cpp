@@ -1,3 +1,5 @@
+// Given video, it extracts faces based on Viola Jones method with previously trained model.
+
 #include "ExtractFaces.hpp"
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>

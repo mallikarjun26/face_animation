@@ -1,3 +1,5 @@
+// Extracts frames of the selected faces from the video.
+
 /*
  * ExtractFrames.cpp
  *
