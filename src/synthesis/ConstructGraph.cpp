@@ -159,9 +159,11 @@ void getVideo(list<int> traverseList, list<long double> traverseDistanceList, st
 
     string videoOutput_path              = videoOutput + ".avi";
     string traverse_hop_distance_path    = videoOutput + "_hop_distances.txt";
+    string node_list_path                = videoOutput + "_node_list.txt";
     string line;
     vector<string> stringVector;
     ofstream traverse_hop_distance_ptr(traverse_hop_distance_path.c_str());
+    ofstream node_list_ptr(node_list_path);
 
     // Print the traverse route
     // cout << "Final traversal of Vertices and size" << traverseList.size() << endl;
@@ -205,6 +207,7 @@ void getVideo(list<int> traverseList, list<long double> traverseDistanceList, st
     //cout << "traverseList.size()=" << traverseList.size() << endl;
     for(list<int>::iterator it=traverseList.begin(); it!=traverseList.end(); it++) {
         int faceNumber = *it;
+        node_list_ptr << faceNumber << endl;
         //cout << "DEBUG 88:: faceMap[i]=" << faceMap[faceNumber] << endl;
         string strTemp = outputLocation + "/faces/" +  faceMap[faceNumber];
         //cout << "DEBUG 77:: strTemp=" << strTemp << endl;
@@ -235,6 +238,7 @@ void getVideo(list<int> traverseList, list<long double> traverseDistanceList, st
         i++;
     }
     traverse_hop_distance_ptr.close();
+    node_list_ptr.close();
  
 }
 
@@ -265,7 +269,7 @@ void synthesizeVideo(const string outputLocation, map<int, list < pair<int, long
 void constructGraph(std::string outputLocation, int numberOfVideos){
     cout << "Entered constructGraph " << endl;
 
-    int noOfVertices, noOfVideos = 1;
+    int noOfVertices, noOfVideos = 100;
     string line;
     vector<string> stringVector;
     string edgeWeightsTxtName = outputLocation + "/edgeWeights.txt";
