@@ -1,3 +1,5 @@
+% Given feature vectors for each face, it finds the edge weight between faces by considering pose and finding the common fiducial points between faces.
+
 function [commonPartsMap, filtersList, faceFeatureMap] = findCommonParts(model, inputPath)
      
     noOfComponentsInEachPartVector = 2*2*58;

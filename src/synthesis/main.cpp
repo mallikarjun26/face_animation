@@ -1,3 +1,5 @@
+// Given edge weights, provides the videos based on greedy next hop and dijkstra shortest path traversals.
+
 #include <iostream>
 #include <fstream>
 #include <boost/algorithm/string.hpp>

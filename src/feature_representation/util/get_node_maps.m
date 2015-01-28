@@ -1,3 +1,5 @@
+// Provides the node number to face file name mapping 
+
 function [mapping] = get_node_maps(output_path)
 
     map_file_name = [output_path '/intermediate_results/face_map.mat'];

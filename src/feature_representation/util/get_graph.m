@@ -1,3 +1,5 @@
+// Provides graph in adjacency matrix format from edgeWeights.txt
+
 function [graph] = get_graph(edge_weights_file)
 
     edge_weights_fileID = fopen(edge_weights_file);

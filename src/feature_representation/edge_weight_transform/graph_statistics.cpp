@@ -1,3 +1,5 @@
+// Provides minimum, average and maximum edge weights between tracks and within tracks
+
 /*
  * main.cpp
  *
