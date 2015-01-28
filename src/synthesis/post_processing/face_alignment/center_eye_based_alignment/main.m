@@ -48,7 +48,7 @@ end
 
 function face_frame = get_frame(node, node_to_file_map, roi, output_folder)
 
-  frame_number_with_locId = node_to_file_map{node,1};
+  frame_number_with_locId = node_to_file_map{node+1,1};
   t_split = strsplit(frame_number_with_locId, '_');
   frame_path = [output_folder '/Frames/' t_split{1,1} '.jpg'];
   full_frame = imread(frame_path);
