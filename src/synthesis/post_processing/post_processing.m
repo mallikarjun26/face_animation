@@ -1,4 +1,4 @@
-// Does intensity normalization and interpolation based on cublic spline on the videos synthesized.
+% Does intensity normalization and interpolation based on cublic spline on the videos synthesized.
 
 function post_processing(output_path)
 
