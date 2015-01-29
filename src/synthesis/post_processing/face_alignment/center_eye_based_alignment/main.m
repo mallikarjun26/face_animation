@@ -123,7 +123,7 @@ function [output_frame] = get_aligned_face(frame, model)
   disp('yes');
 end
 
-function [left_eye, right_eye, chin] = get_eye_loc(bs)
+function [left_eye, right_eye, chin] = get_fid_loc(bs)
 
   index = 15;
   x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
