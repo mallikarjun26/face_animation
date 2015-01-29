@@ -118,12 +118,12 @@ function [output_frame] = get_aligned_face(frame, model)
   if(size(bs, 2) ==0)
     return;
   end
-  [left_eye, right_eye] = get_eye_loc(bs);
-  output_frame = align_face(frame, left_eye, right_eye);
+  [left_eye, right_eye, chin] = get_fid_loc(bs);
+  output_frame = align_face(frame, left_eye, right_eye, chin);
   disp('yes');
 end
 
-function [left_eye, right_eye] = get_eye_loc(bs)
+function [left_eye, right_eye, chin] = get_eye_loc(bs)
 
   index = 15;
   x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
@@ -134,7 +134,19 @@ function [left_eye, right_eye] = get_eye_loc(bs)
   x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
   y = uint32((bs.xy(index,2) + bs.xy(index,4))/2);
   right_eye = [x y];
-
+  
+  index = 52;
+  x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
+  y = uint32((bs.xy(index,2) + bs.xy(index,4))/2);
+  right_chin = [x y];
+  
+  index = 61;
+  x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
+  y = uint32((bs.xy(index,2) + bs.xy(index,4))/2);
+  left_chin = [x y];
+  
+  chin = uint32((right_chin + left_chin)/2);
+  
 end
 
 

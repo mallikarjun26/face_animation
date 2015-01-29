@@ -31,10 +31,10 @@ function main(output_folder)
     output_video_ptr.FrameRate = 24;
     open(output_video_ptr);
     nodes = textscan(temp_node_list_ptr, '%d');
-    number_of_nodes = size(nodes, 1);
+    number_of_nodes = size(nodes{1,1}, 1);
     
     for j=1:number_of_nodes
-      node = nodes{j,1};
+      node = nodes{1,1}(j,1);
       face_frame = get_frame(node, node_to_file_map, roi, output_folder);
       output_frame = get_aligned_face(face_frame, model);
       if(size(output_frame, 1) == 0)
@@ -48,7 +48,7 @@ end
 
 function face_frame = get_frame(node, node_to_file_map, roi, output_folder)
 
-  frame_number_with_locId = node_to_file_map{node,1};
+  frame_number_with_locId = node_to_file_map{node+1,1};
   t_split = strsplit(frame_number_with_locId, '_');
   frame_path = [output_folder '/Frames/' t_split{1,1} '.jpg'];
   full_frame = imread(frame_path);
@@ -118,22 +118,35 @@ function [output_frame] = get_aligned_face(frame, model)
   if(size(bs, 2) ==0)
     return;
   end
-  [left_eye, right_eye] = get_eye_loc(bs);
-  output_frame = align_face(frame, left_eye, right_eye);
+  [left_eye, right_eye, chin] = get_fid_loc(bs);
+  output_frame = align_face(frame, left_eye, right_eye, chin);
+  disp('yes');
 end
 
-function [left_eye, right_eye] = get_eye_loc(bs)
+function [left_eye, right_eye, chin] = get_eye_loc(bs)
 
   index = 15;
-  x = uint32(bs.xy(index,1) + (bs.xy(index,3)/2));
-  y = uint32(bs.xy(index,2) + (bs.xy(index,4)/2));
+  x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
+  y = uint32((bs.xy(index,2) + bs.xy(index,4))/2);
   left_eye = [x y];
 
   index = 26;
-  x = uint32(bs.xy(index,1) + (bs.xy(index,3)/2));
-  y = uint32(bs.xy(index,2) + (bs.xy(index,4)/2));
+  x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
+  y = uint32((bs.xy(index,2) + bs.xy(index,4))/2);
   right_eye = [x y];
-
+  
+  index = 52;
+  x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
+  y = uint32((bs.xy(index,2) + bs.xy(index,4))/2);
+  right_chin = [x y];
+  
+  index = 61;
+  x = uint32((bs.xy(index,1) + bs.xy(index,3))/2);
+  y = uint32((bs.xy(index,2) + bs.xy(index,4))/2);
+  left_chin = [x y];
+  
+  chin = uint32((right_chin + left_chin)/2);
+  
 end
 
 
