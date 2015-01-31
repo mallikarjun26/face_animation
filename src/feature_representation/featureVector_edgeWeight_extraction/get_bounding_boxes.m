@@ -1,7 +1,10 @@
 function get_bounding_boxes(inputPath)
 
     bounding_boxes_file = [inputPath '/intermediate_results/bounding_boxes.mat'];
-
+    bounding_boxes_text_file = [inputPath '/intermediate_results/bounding_boxes.txt'];
+    face_dump_folder = [inputPath '/faces_extended'];
+    bounding_boxex_text_ptr = fopen(bounding_boxes_text_file, 'w');
+    
     compile;
 
     % % Pre-trained model with 99 parts. Works best for faces larger than 150*150
@@ -87,7 +90,9 @@ function get_bounding_boxes(inputPath)
             
             im = im(y1:y2, x1:x2, :);
             im = imresize(im, [200 200]);
-            imagesc(im);
+           
+            face_file_name = [face_dump_folder '/' faceNo '.jpg' ];
+            imwrite(im, face_file_name);
             % Call detect function and collect the part's bounding boxes and angle
             disp(size(im));
             disp('Calling detect function on bounded image');
@@ -98,6 +103,11 @@ function get_bounding_boxes(inputPath)
             if(~isempty(bs))
                 node_number = uint32(mapOfFaces(faceNo)) + uint32(1);
                 bounding_boxes{node_number} = bs;
+                number_of_fiducials = size(bs.xy, 1);
+                fprintf(bounding_boxex_text_ptr, '%d %d %d\n', node_number, bs.c, number_of_fiducials);
+                for i=1:number_of_fiducials
+                  fprintf(bounding_boxex_text_ptr, '%d %d %d %d\n', bs.xy(i,:));
+                end
             end
 
         end
