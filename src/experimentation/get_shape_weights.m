@@ -7,7 +7,7 @@ function [appearance_weights_graph_500, shape_weights_graph_500] = get_shape_wei
   p_fid_row_map = get_fid_row_map(model);
   common_parts_map = get_common_parts(model);
   
-  appearance_weights_graph_500 = appearance_shape_weights(1:500, 1:500);
+  appearance_weights_graph_500 = appearance_weights_graph(1:500, 1:500);
   clear appearance_weights_graph;
   
   shape_weights_graph_500 = -1 * ones(500,500);
