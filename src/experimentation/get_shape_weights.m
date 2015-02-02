@@ -1,5 +1,7 @@
 function [appearance_weights_graph_500, shape_weights_graph_500] = get_shape_weights(input_path)
 
+  node_set = 500;
+
   load([input_path '/intermediate_results/appearance_weights_graph.mat']);
   load([input_path '/intermediate_results/bounding_boxes.mat']);
   load('../feature_representation/featureVector_edgeWeight_extraction/face_p99.mat');
@@ -7,36 +9,42 @@ function [appearance_weights_graph_500, shape_weights_graph_500] = get_shape_wei
   p_fid_row_map = get_fid_row_map(model);
   common_parts_map = get_common_parts(model);
   
-  appearance_weights_graph_500 = appearance_weights_graph(1:500, 1:500);
+  appearance_weights_graph_500 = appearance_weights_graph(1:node_set, 1:node_set);
   clear appearance_weights_graph;
   
-  shape_weights_graph_500 = -1 * ones(500,500);
+  shape_weights_graph_500 = zeros(node_set,node_set);
   
-  parfor i=1:500
+  parfor i=1:node_set
     s_node_1 = bounding_boxes{1,i};
-    disp(['outer loop in node ' num2str(i) '\n']);
-    for j=i:500
-      t_shape_weights_graph_500 = -1 * (ones(1,500));
+    disp(['outer loop in node ' num2str(i) ]);
+    t_shape_weights_graph_500 = zeros(1,node_set);
+    for j=i:node_set
+      %disp(['inner loop in node ' num2str(j)]);
+      
+      if(i==j)
+        t_shape_weights_graph_500(1,j) = 0;
+        continue;
+      end
+      
       if(appearance_weights_graph_500(i,j) == -1)
         t_shape_weights_graph_500(1,j) = -1;
         %shape_weights_graph_500(j,i) = -1;
         continue;
       end
-      if(i==j)
-        t_shape_weights_graph_500(1,j) = 0;
-      end
+      
       s_node_2 = bounding_boxes{1,j};
       t_shape_weights_graph_500(1,j) = get_shape_distance(s_node_1, s_node_2, p_fid_row_map, common_parts_map);
       %shape_weights_graph_500(j,i) = shape_weights_graph_500(i,j);
     end
+    
     shape_weights_graph_500(i,:) = t_shape_weights_graph_500;
   end
   
-  for i=1:500
-    for j=(i+1):500
-      shape_weights_graph_500(j,i) = shape_weights_graph_500(j,i);
-    end
-  end
+%   for i=1:node_set
+%     for j=(i+1):node_set
+%       shape_weights_graph_500(j,i) = shape_weights_graph_500(i,j);
+%     end
+%   end
   
 end
 
@@ -46,7 +54,7 @@ function min_dist = get_shape_distance(s_node_1, s_node_2, p_fid_row_map, common
   xy_node_1 = s_node_1.xy;
   xy_node_2 = s_node_2.xy;
 
-  if(s_node_1.c < s_node_1.c)
+  if(s_node_1.c < s_node_2.c)
     index = [num2str(s_node_1.c) '-' num2str(s_node_2.c)];
   else
     index = [num2str(s_node_2.c) '-' num2str(s_node_1.c)];
