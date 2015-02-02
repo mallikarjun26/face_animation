@@ -12,21 +12,29 @@ function [appearance_weights_graph_500, shape_weights_graph_500] = get_shape_wei
   
   shape_weights_graph_500 = -1 * ones(500,500);
   
-  for i=1:500
+  parfor i=1:500
     s_node_1 = bounding_boxes{1,i};
     disp(['outer loop in node ' num2str(i) '\n']);
     for j=i:500
+      t_shape_weights_graph_500 = -1 * (ones(1,500));
       if(appearance_weights_graph_500(i,j) == -1)
-        shape_weights_graph_500(i,j) = -1;
-        shape_weights_graph_500(j,i) = -1;
+        t_shape_weights_graph_500(1,j) = -1;
+        %shape_weights_graph_500(j,i) = -1;
         continue;
       end
       if(i==j)
-        shape_weights_graph_500(i,j) = 0;
+        t_shape_weights_graph_500(1,j) = 0;
       end
       s_node_2 = bounding_boxes{1,j};
-      shape_weights_graph_500(i,j) = get_shape_distance(s_node_1, s_node_2, p_fid_row_map, common_parts_map);
-      shape_weights_graph_500(j,i) = shape_weights_graph_500(i,j);
+      t_shape_weights_graph_500(1,j) = get_shape_distance(s_node_1, s_node_2, p_fid_row_map, common_parts_map);
+      %shape_weights_graph_500(j,i) = shape_weights_graph_500(i,j);
+    end
+    shape_weights_graph_500(i,:) = t_shape_weights_graph_500;
+  end
+  
+  for i=1:500
+    for j=(i+1):500
+      shape_weights_graph_500(j,i) = shape_weights_graph_500(j,i);
     end
   end
   
@@ -38,13 +46,13 @@ function min_dist = get_shape_distance(s_node_1, s_node_2, p_fid_row_map, common
   xy_node_1 = s_node_1.xy;
   xy_node_2 = s_node_2.xy;
 
-  if(s_node_1.c < s_node_1)
+  if(s_node_1.c < s_node_1.c)
     index = [num2str(s_node_1.c) '-' num2str(s_node_2.c)];
   else
     index = [num2str(s_node_2.c) '-' num2str(s_node_1.c)];
   end
 
-  temp_common_array = common_parts_map(index);
+  temp_common_parts = common_parts_map(index);
   number_of_common_parts = size(temp_common_parts,2);
   fid_row_map_1 = p_fid_row_map(s_node_1.c);
   fid_row_map_2 = p_fid_row_map(s_node_2.c);
@@ -54,8 +62,8 @@ function min_dist = get_shape_distance(s_node_1, s_node_2, p_fid_row_map, common
     for y=-4:4
       shape_dist = 0;
       for i=1:number_of_common_parts
-        row_number_1 = fid_row_map_1(temp_common_array(1,i));
-        row_number_2 = fid_row_map_2(temp_common_array(1,i));
+        row_number_1 = fid_row_map_1(temp_common_parts(1,i));
+        row_number_2 = fid_row_map_2(temp_common_parts(1,i));
         
         xy_1 = [(xy_node_1(row_number_1,1)+((xy_node_1(row_number_1,3))/2)) (xy_node_1(row_number_1,2)+((xy_node_1(row_number_1,4))/2))];
         xy_2 = [(xy_node_2(row_number_2,1)+((xy_node_2(row_number_2,3))/2)) (xy_node_2(row_number_2,2)+((xy_node_2(row_number_2,4))/2))];
