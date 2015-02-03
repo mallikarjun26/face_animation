@@ -1,4 +1,4 @@
-function showShapes( facemap, facebbox, dist_adjacency, pt_indx, idx )
+function showShapes( facemap, facebbox, dist_adjacency, pt_indx, idx, nFaces )
 % function showShapes( dist_adjacency, pt_indx, idx )
 % This function shows the two images with shapes plotted
 % for the index 'idx' into the variable 'dist_adjacency' where
@@ -13,6 +13,16 @@ function showShapes( facemap, facebbox, dist_adjacency, pt_indx, idx )
 % pt_indx		 - the index of faces chosen to form the graph
 % idx			 - vector containing all the indices into 'dist_adjacency'
 %					for which you want to plot and see faces.
+% nFaces		 - number of faces to show per row. Ideally should take a value
+%					between 3 & 10. Optional argument
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Important: add the path to the set of face codes. This is usually easily done by using genpath
+% addpath( genpath( 'Path/to/faces/src/' ) ) ;
+% This is essential to run this code.
+
+if nargin < 6
+	nFaces = 10 ;
+end
 
 % First compute row and column indices from single dimension
 % indices
@@ -24,15 +34,15 @@ j = pt_indx(j) ;
 
 % Now read all the images and plot them along with
 % their shapes.
-for x = 0 : round(length(idx)/10) ;
-	for y = 1 : min(9, length(idx)-x*10)
-		imi = imread( facemap{i( x*10+y )} ) ;
-		imj = imread( facemap{j( x*10+y )} ) ;
-		subplot(2, 10, y) ; showboxes(imi, facebbox{i(x*10+y)}, 1:13) ;
-		subplot(2, 10, 10+y) ; showboxes(imj, facebbox{j(x*10+y)}, 1:13) ;
+for x = 0 : round(length(idx)/nFaces) ;
+	for y = 1 : min(nFaces-1, length(idx)-x*nFaces)
+		imi = imread( facemap{i( x*nFaces+y )} ) ;
+		imj = imread( facemap{j( x*nFaces+y )} ) ;
+		subplot(2, nFaces, y) ; showboxes(imi, facebbox{i(x*nFaces+y)}, 1:13) ;
+		subplot(2, nFaces, nFaces+y) ; showboxes(imj, facebbox{j(x*nFaces+y)}, 1:13) ;
 	end
-    if y == 9
-		disp('Displaying ten images, press any key to display the next 10') ;
+    if y == (nFaces-1)
+		fprintf( 'Displaying %d images, press any key to display the next %d \n', nFaces, nFaces ) ;
 		pause ;
 		clf ;
 	end

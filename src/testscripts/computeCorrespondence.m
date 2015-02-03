@@ -95,3 +95,6 @@ end
 if abs(sum(sum(dist_adjacency - dist_adjacency'))) < 1e-3
 	disp('Distance seems to be symmetric in nature!') ;
 end
+
+disp( 'Saving Graph into temporary file, move it to a name and place that you will remember...' ) ;
+save( 'TmpSaveFile.mat', 'pt_indx', 'dist_adjacency', 'tmpbbox' ) ;

@@ -10,6 +10,16 @@ function [facenums, tracknums, diffidx] = computeTrackNumbers( facemap, dist_adj
 % frameToTrack   - Cell data that contains the mapping of frame boundaries to track numbers.
 % idx			 - indices into 'dist_adjacency' for which you want to find out these numbers.
 %				   size Nx1.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                   Compute idx as follows
+%                   idxtmp = find( dist_adjacency ~= Inf ) ;
+%                   [srtval, srtidx] = sort( dist_adjacency( idxtmp ) ;
+%                   idxdiff = find( srtval < some_value ) ;
+%                   idx = idxtmp( idxdiff ) ;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
 % diffval		 - Optional argument that specifies the minimum number of tracks that faces have to
 % 					be apart by
 %
@@ -34,22 +44,22 @@ j = pt_indx(j) ;
 
 % facemap{1} is of the format '/path/to/image/1024_0.jpg'
 % where idxbegin finds the location of the last '/' just before 1024_0.jpg
-idxbegin = max( find( facemap{1} == '/' ) ) ;
+idxbegin = max( find( facemap{1} == '/' ) ) + 1 ;
 
 % Variable that stores the frame numbers for each face set.
-framenums = zeros( 0, 2 ) ;
+facenums = zeros( nIndices, 2 ) ;
 
 for x = 1 : nIndices
-	framenums(x, :) = [str2nums( facemap{i(x)}(idxbegin:end-6) ) str2nums( facemap{j(x)}(idxbegin:end-6) )] ;
+	facenums(x, :) = [str2num( facemap{i(x)}(idxbegin:end-6) ) str2num( facemap{j(x)}(idxbegin:end-6) )] ;
 end
 
 % Variable that stores the track numbers for each track.
-tracknums = zeros( 0, 2 ) ;
+tracknums = zeros( nIndices, 2 ) ;
 
 % Now for each frame number find the corresponding track number
 for x = 1 : nIndices
-	tracknums(x, :) = [ nTracks-sum( framenums(x, 1) < frameToTrack{2} )+1 ...
-						nTracks-sum( framenums(x, 2) < frameToTrack{2} )+1 ] ;
+	tracknums(x, :) = [ nTracks-sum( facenums(x, 1) < frameToTrack{2} )+1 ...
+						nTracks-sum( facenums(x, 2) < frameToTrack{2} )+1 ] ;
 end
 
 if nargin < 6
