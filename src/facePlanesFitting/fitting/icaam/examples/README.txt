@@ -1,0 +1,2 @@
+For space constraints reason, the dataset needed for the examples aren't included. 
+Go to the sourceforge page (http://sourceforge.net/projects/icaam/files/) to get the latest complete version of the software.

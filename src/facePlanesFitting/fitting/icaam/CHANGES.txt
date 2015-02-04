@@ -1,0 +1,77 @@
+------------------------------------------------------------------------
+r17
+
+Fix a bug causing annotate to not work with gray scale images. Also fix some other minor bugs and typos.
+
+
+------------------------------------------------------------------------
+r16
+
+Fix a bug in MATLAB version detection. Fix some typos and update various stuff.
+
+------------------------------------------------------------------------
+r15
+
+Remove a couple of loops to use less memory during appearance PCA.
+
+------------------------------------------------------------------------
+r14
+
+Remove a couple of loops to use less memory during appearance PCA.
+------------------------------------------------------------------------
+r13
+
+Document app_pca.
+------------------------------------------------------------------------
+r12
+
+Implemented improved PCA for appearances. Removed trailing spaces from build_models_2d_from_files.m
+Thanks to Cristina Segalin for her feedback.
+------------------------------------------------------------------------
+r11
+
+Make so that a warning is issued in the mex-file instead of an error if matlab exceptions are not supported.
+
+------------------------------------------------------------------------
+r10
+
+Apparently C99 is still too bleeding edge for most C compilers, so I went for ANSI C. It wasn't hard to add those lovely up-front declarations and 'fix' the for loops, but now I feel like I died a little inside...
+
+------------------------------------------------------------------------
+r9
+
+Ported the MEX-file to C99, should now compile using LCC. It'll still be a pain for 64-bit MATLAB user to use the MEX-file, though. For that reason, I've included a binary.
+------------------------------------------------------------------------
+r8
+
+(More or less) removed assumption that sizeof(unsigned int) is 32 bit. Fortunately, that is pretty much the case for all compilers.
+------------------------------------------------------------------------
+r7
+
+Improved a bit compatibility with older versions of MATLAB. 
+------------------------------------------------------------------------
+r6
+
+Forgot to change also build_model_2d_from_files to ensure 64-bit portability.
+------------------------------------------------------------------------
+r5
+
+Added changelog and removed 64-bit related item from TODOs.
+------------------------------------------------------------------------
+r4
+
+Improved support for older versions of MATLAB and older compilers. Also implemented support for 64bit MATLAB. 
+Thanks to "N S LAKSHMI PRABHA" for his feedback.
+------------------------------------------------------------------------
+r3
+
+Added FAQs.
+------------------------------------------------------------------------
+r2
+
+Minor updates to licensing and documentation.
+------------------------------------------------------------------------
+r1
+
+Initial import
+------------------------------------------------------------------------

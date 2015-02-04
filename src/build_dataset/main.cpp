@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     }
 
     const string outputLocation      = argv[1];
-    const string videoLocation       = outputLocation + "/../rest/As Good As It Gets [1997].avi";
+    const string videoLocation       = outputLocation + "/../../../JNData/rest/As Good As It Gets [1997].avi";
     const string haarCascadeXML      = "./haarcascade_frontalface_default.xml";
 
     // Extract faces from the movie

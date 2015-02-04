@@ -1,0 +1,10 @@
+Author: Developed by Luca Vezzaro (elvezzaro@gmail.com) while working on his 
+thesis about Active Appearance Models at the University of Verona (Italy).
+
+Acknowledgments: 
+Special thanks to Simon Baker for providing important implementation details and 
+Jing Xiao for allowing me to look at his implementation of the shape from motion 
+algorithm.
+The annotation procedure was inspired by the one provided in Mikkel B. Stegmann's 
+"AAM-API" implementation , while some other ideas were borrowed form Brian Amberg's 
+"compositional descent" implementation.

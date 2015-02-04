@@ -38,7 +38,8 @@ for x = 0 : round(length(idx)/nFaces) ;
 	for y = 1 : min(nFaces-1, length(idx)-x*nFaces)
 		imi = imread( facemap{i( x*nFaces+y )} ) ;
 		imj = imread( facemap{j( x*nFaces+y )} ) ;
-		subplot(2, nFaces, y) ; showboxes(imi, facebbox{i(x*nFaces+y)}, 1:13) ;
+		subplot(2, nFaces, y) ; showboxes(imi, facebbox{i(x*nFaces+y)}, 1:13) ; 
+								title( sprintf( 'Matching score %f', dist_adjacency(idx(x*nFaces+y)) ) ) ;
 		subplot(2, nFaces, nFaces+y) ; showboxes(imj, facebbox{j(x*nFaces+y)}, 1:13) ;
 	end
     if y == (nFaces-1)
