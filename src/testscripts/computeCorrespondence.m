@@ -1,14 +1,15 @@
 clear all ; close all ;
 
 % First pick 500 random points from the database.
-nrandpts = 500 ;
+nrandpts = 2000 ;
 pt_indx = randperm(4735) ;
-pt_indx = pt_indx(1:500) ;
+pt_indx = pt_indx(1:nrandpts) ;
 
 % PATH LOADING: Change these lines before running!
-load('~/FaceAnimation/JNData/Faces5000/intermediate_results/bounding_boxes.mat') ;
-load('~/FaceAnimation/JNData/Faces5000/intermediate_results/face_map.mat') ;
-load('~/FaceAnimation/src/feature_representation/featureVector_edgeWeight_extraction/face_p99.mat') ;
+input_path = '/home/mallikarjun/data/face_animation/Faces5000';
+load([input_path '/intermediate_results/bounding_boxes.mat']) ;
+load([input_path '/intermediate_results/face_map.mat']) ;
+load('../feature_representation/featureVector_edgeWeight_extraction/face_p99.mat') ;
 
 % Variables bounding_boxes and mapping need to be used, if necessary.
 % Initially set all distances to infinity.
