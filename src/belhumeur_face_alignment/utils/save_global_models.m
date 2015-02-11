@@ -35,6 +35,6 @@ function [fid_pts] = get_fiducials(input_path)
     
     %
     fid_pts = textscan(fid, '%u %u', 'HeaderLines', 3);
-    fid_pts = [fid_pts{1} fid_pts{2}];
+    fid_pts = [fid_pts{2} fid_pts{1}];
 
 end

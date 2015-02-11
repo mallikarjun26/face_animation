@@ -1,8 +1,8 @@
 % Given image and fiducial points in array, plots the data
 
-function plot_fiducials(im, fid_pts)
+function [fig_h] = plot_fiducials(im, fid_pts)
 
-    figure;
+    fig_h = figure;
     imshow(im);
     hold on;
 
@@ -11,7 +11,7 @@ function plot_fiducials(im, fid_pts)
     number_of_fiducials = size(fid_pts, 1);
     
     for i=1:number_of_fiducials
-        plot(fid_pts(i,1),fid_pts(i,2),'r.','markersize',15);
+        plot(fid_pts(i,2),fid_pts(i,1),'r.','markersize',15);
         hold on;
     end
     

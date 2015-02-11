@@ -1,4 +1,4 @@
-function local_prob = get_part_probability(im, local_filters)
+function local_prob = get_part_probability(im, local_filters, path)
 
     %
     addpath('../feature_representation/featureVector_edgeWeight_extraction/');
@@ -16,9 +16,12 @@ function local_prob = get_part_probability(im, local_filters)
         part_resp = part_resp - (min(part_resp(:)));
         resp_sum  = sum(part_resp(:));
         part_resp = part_resp / resp_sum;
-        part_resp = [ zeros(3, 244); part_resp; zeros(3, 244) ];
-        part_resp = [ zeros(250, 3)  part_resp  zeros(250, 3) ];
         local_prob{i} = part_resp;
+        
+        image_file_name = [path '/filter_responses/' num2str(i) '.jpg'];
+        part_resp = mat2gray(part_resp);
+        imwrite(part_resp, image_file_name)
+       
     end
 
 end
