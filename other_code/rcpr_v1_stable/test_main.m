@@ -52,7 +52,7 @@ function [p,pRT] = test_main()
     %Prediction
     
     n = size(p, 1);
-    figure;
+    fig_h = figure;
     for i=1:n
         subplot(1,2,1);
         shapeGt('draw',regModel.model,IsT{i},p(i,:),...
@@ -60,12 +60,15 @@ function [p,pRT] = test_main()
         subplot(1,2,2);
         showboxes(IM{i}, BB{1}, posemap);
         
-        w = waitforbuttonpress;
-        if w == 0
-            disp('Button click')
-        else
-            disp('Key press')
-        end
+        image_file_name =  ['/home/mallikarjun/data/face_animation/rcpr_data/fitting_comp_results/' num2str(i) '.jpg'];
+        saveas(fig_h, image_file_name);
+        
+%         w = waitforbuttonpress;
+%         if w == 0
+%             disp('Button click')
+%         else
+%             disp('Key press')
+%         end
         clf;
     end
     
