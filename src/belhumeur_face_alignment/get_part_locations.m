@@ -9,7 +9,7 @@ function part_locations = get_part_locations(local_prob, part_dist_of_exemplars)
     part_locations = zeros(number_of_parts, 2);
     
     %
-    parfor ii=1:number_of_parts
+    for ii=1:number_of_parts
         posterior_prob = double(zeros(image_size));
         current_part   = local_prob{ii};
         for i=1:image_size(1,1)

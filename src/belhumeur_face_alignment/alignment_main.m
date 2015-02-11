@@ -23,17 +23,20 @@ function alignment_main(im, path)
     %
     tic;
     disp('Choosing (k,t) feasible sets ....');
-    feasible_global_models = choose_global_models(global_fiducials, local_prob, filtered_size, im, path);
+    if(exist([path '/intermediate_results/feasible_global_models.mat']) > 0)
+        disp('Loading from previously stored results');
+        load([path '/intermediate_results/feasible_global_models.mat']);
+    else
+        feasible_global_models = choose_global_models(global_fiducials, local_prob, filtered_size, im, path);
+        save([path '/intermediate_results/feasible_global_models.mat'], 'feasible_global_models');
+    end
     disp(['Time taken = ' num2str(toc)]);
-    save([path '/intermediate_results/feasible_global_models.mat'], 'feasible_global_models');
+    
     
     %
     tic;
-    if(exist([path '/intermediate_results/feasible_global_models.mat']) > 0)
-        load([path '/intermediate_results/feasible_global_models.mat']);
-        disp('Finding part distributions for selected global models ....')
-        part_dist_of_exemplars = get_part_dist_of_exemplars(feasible_global_models);
-    end
+    disp('Finding part distributions for selected global models ....')
+    part_dist_of_exemplars = get_part_dist_of_exemplars(feasible_global_models);
     disp(['Time taken = ' num2str(toc)]);
     
     %

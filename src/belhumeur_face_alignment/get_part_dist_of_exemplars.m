@@ -33,10 +33,18 @@ function part_dist_of_exemplars = get_part_dist_of_exemplars(feasible_global_mod
         part_I = feasible_global_models{i};
         part_J = feasible_global_models{nearest_exemplar};
         for j=1:number_of_parts
-            y0 = part_I(j,1);
-            x0 = part_I(j,2);
+            y0 = double(part_I(j,1));
+            x0 = double(part_I(j,2));
             sigma_y = double(abs(y0 - part_J(j,1))) / double(inter_ocular_dist);
+            if(sigma_y == 0)
+                sigma_y = realmin;
+            end
+            
             sigma_x = double(abs(x0 - part_J(j,2))) / double(inter_ocular_dist);
+            if(sigma_x == 0)
+                sigma_x = realmin;
+            end
+            
             gaussian_parameters(j, :) = [y0 x0 sigma_y sigma_x];
         end
         part_dist_of_exemplars{i} = gaussian_parameters;
