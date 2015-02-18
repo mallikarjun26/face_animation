@@ -1,0 +1,52 @@
+1301		-	*	frontal, glasses
+1438		-	*	profile
+3783		-	*	frontal, expression surprise
+467			-	*	profile
+1640		-	*	profile, smiling
+1130		-	*	frontal, looking down
+2679		-	*	profile, smiling
+1973		-	*	frontal
+474			-	*	frontal, speaking
+2223		-		frontal, jaw problem
+1386		-		frontal, jaw problem
+4102		-		frontal, nose mouth problem
+2601		-		frontal, eyes mouth problem
+3629		-	*	frontal, eyes nose mouth jaw signifcantly wrong
+3029		-		frontal, jaw problem
+1189		-	*	frontal, eye problem occlusion near mouth
+4279		-	*	profile, eye mouth jaw problem
+4409		-	*	frontal, jaw nose problem
+3260		-		frontal, nose jaw problem
+4661		-		frontal, eyebrow mouth problem
+4422		-		frontal, noise jaw problem
+3981		-		frontal, noise mouth problem
+4678		-		frontal, nose eye problem
+4346		-	*	frontal, eye nose jaw problem, glasses
+2419		-		frontal, eye problem 
+4093		-	*	frontal, eye eyebrow noise mouth jaw problem
+445			-		frontal, eye mouth nose problem
+3852		-		frontal, noise mouth eyebrow problem
+503			-		frontal, eye mouth problem
+347			-		frontal, mouth jaw problem
+822			-	*	frontal, everything wrong
+333			-	* 	frontal, everything wrong
+4257		-		frontal, mouth problem
+1790		-	*	profile, eye mouth jaw problem
+4043		-	*	profile, eye mouth jaw problem
+3927		-		frontal, eye problem
+57			-		frontal, nose mouth eye problem, glasses
+2999		-		frontal, eye nose problem
+3332		-		frontal, eyebrow eye problem
+3086		-		frontal, jaw problem
+3437		-	*	profile, eye mouth jaw problem
+4466		-	*	profile, eye mouth jaw problem
+421			-		frontal, eye eyebrow jaw problem
+2726		-		frontal, eye eyebrow jaw problem
+4522		-	*	profile, eyebrow eye mouth jaw problem
+4278		-	*	profile, everything wrong
+3445		-		frontal, eyebrow eye mouth problem
+1590		-		frontal, eye nose mouth problem
+2349		-		frontal, jaw problem
+3258		-		frontal, eyebrow eye jaw problem
+1118		-	*	frontal, mouth jaw problem and miage cropping problem
+1238		-	*	frontal, mouth jaw problem with occlusion
