@@ -157,7 +157,7 @@ for t=t0:T
        if(model.isFace),bboxes=bboxes(good,:);bbs=bboxes(imgIds,:);end
     end
     if((t==1 || mod(t,5)==0) && verbose)
-        msg=tStatus(tStart,t,T);fprintf(['Applying ' msg]); 
+        %msg=tStatus(tStart,t,T);fprintf(['Applying ' msg]); 
     end
 end
 end
