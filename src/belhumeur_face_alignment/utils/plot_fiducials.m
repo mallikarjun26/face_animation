@@ -1,9 +1,9 @@
 % Given image and fiducial points in array, plots the data
 
-function [fig_h] = plot_fiducials(im, fid_pts)
+function plot_fiducials(im, fid_pts)
 
-    fig_h = figure;
-    imshow(im);
+    %fig_h = figure;
+    %imshow(im);
     hold on;
 
     %plot(xy(:,1),xy(:,2),'r.','markersize',15);

@@ -1,4 +1,4 @@
-function alignment_main(im, path)
+function alignment_main(im, path, only_tr_sc)
 
     clc;
 
@@ -23,13 +23,14 @@ function alignment_main(im, path)
     %
     tic;
     disp('Choosing (k,t) feasible sets ....');
-    if(exist([path '/intermediate_results/feasible_global_models.mat']) > 0)
-        disp('Loading from previously stored results');
-        load([path '/intermediate_results/feasible_global_models.mat']);
-    else
-        feasible_global_models = choose_global_models(global_fiducials, local_prob, filtered_size, im, path);
-        save([path '/intermediate_results/feasible_global_models.mat'], 'feasible_global_models');
-    end
+%     if(exist([path '/intermediate_results/feasible_global_models.mat']) > 0)
+%         disp('Loading from previously stored results');
+%         load([path '/intermediate_results/feasible_global_models.mat']);
+%     else
+         feasible_global_models = choose_global_models(global_fiducials, local_prob, filtered_size, im, path, only_tr_sc);
+%         save([path '/intermediate_results/feasible_global_models.mat'], 'feasible_global_models');
+%     end
+    
     disp(['Time taken = ' num2str(toc)]);
     
     

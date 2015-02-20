@@ -1,4 +1,4 @@
-function feasible_global_models = choose_global_models(global_fiducials, local_prob, filtered_size, im, path)
+function feasible_global_models = choose_global_models(global_fiducials, local_prob, filtered_size, im, path, only_tr_sc)
 
     %
     r = 10000;  % Number of iterations
@@ -66,8 +66,11 @@ function feasible_global_models = choose_global_models(global_fiducials, local_p
                 % find the transformation
                 % Use the transformed global positions to find the score.
                 flag = false;
-                %[d,Z,tr] = procrustes(X,Y,'reflection',flag);
-                [d,Z,tr] = do_st(X, Y);
+                if(only_tr_sc == false)
+                    [d,Z,tr] = procrustes(X,Y,'reflection',flag);
+                else
+                    [d,Z,tr] = do_st(X, Y);
+                end
                 tr_dist(l, 1) = d;
                 
                 transformed_model = tr.b* double(exemplar) *tr.T ;
