@@ -99,14 +99,23 @@ if( isfield(model,'isFace') && model.isFace ),
     if(strcmp(model.name,'cofw')),
         %WITH OCCLUSION
         nfids = D/3;
-        for n=1:N
-            occl=phis(n,(nfids*2)+1:nfids*3);
-            vis=find(occl==0);novis=find(occl==1);
-            plot(phis(n,vis),phis(n,vis+nfids),'g.',...
-                'MarkerSize',lw);
-            h=plot(phis(n,novis),phis(n,novis+nfids),'r.',...
-                'MarkerSize',lw);
+%         for n=1:N
+%             occl=phis(n,(nfids*2)+1:nfids*3);
+%             vis=find(occl==0);novis=find(occl==1);
+%             plot(phis(n,vis),phis(n,vis+nfids),'g.',...
+%                 'MarkerSize',lw);
+%             h=plot(phis(n,novis),phis(n,novis+nfids),'r.',...
+%                 'MarkerSize',lw);
+%         end 
+        
+        for i=1:29
+            x = phis(1,i);
+            y = phis(1,i+nfids) ;
+            text(x+5,y+1,num2str(i), 'FontSize', 12); 
+            h=plot(x,y,'g.', 'MarkerSize',lw);
         end
+        
+        
     else
         %REGULAR
         if(N==1),cs='g';end, nfids = D/2;
