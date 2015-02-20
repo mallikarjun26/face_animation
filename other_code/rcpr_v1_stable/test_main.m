@@ -1,10 +1,12 @@
-function [p,pRT] = test_main()
+function [p,pRT, err_measure, regModel] = test_main()
 
     %
     load('/home/mallikarjun/projects/face_animation/src/feature_representation/featureVector_edgeWeight_extraction/face_p99.mat');
     load('/home/mallikarjun/data/face_animation/Faces5000/intermediate_results/bounding_boxes.mat');
     load('/home/mallikarjun/data/face_animation/Faces5000/intermediate_results/facemap.mat');
     addpath('/home/mallikarjun/projects/face_animation/src/feature_representation/featureVector_edgeWeight_extraction/');
+    
+   
     
     %
     [IM, BB, IsT, bboxes, posemap] = get_test_file();
@@ -53,26 +55,43 @@ function [p,pRT] = test_main()
     
     n = size(p, 1);
     fig_h = figure;
+    err_measure = [];
     for i=1:n
+        err_measure = [err_measure; get_error(p(i,:), BB{i})];
+        
         subplot(1,2,1);
-        shapeGt('draw',regModel.model,IsT{i},p(i,:),...
-        {'lw',20});
+        h =shapeGt('draw',regModel.model,IsT{i},p(i,:),{'lw',20});
         subplot(1,2,2);
-        showboxes(IM{i}, BB{1}, posemap);
+        showboxes(IM{i}, BB{i}, posemap);
         
         image_file_name =  ['/home/mallikarjun/data/face_animation/rcpr_data/fitting_comp_results/' num2str(i) '.jpg'];
         saveas(fig_h, image_file_name);
         
-%         w = waitforbuttonpress;
-%         if w == 0
-%             disp('Button click')
-%         else
-%             disp('Key press')
-%         end
-        clf;
+        pause;
+       clf;
     end
     
+    hist(err_measure, 10);
+    
 end
+
+function err_measure = get_error(p, BB)
+
+    %
+    fid = fopen('/home/mallikarjun/data/face_animation/rcpr_data/rcpr_true_common_fids.txt', 'r');
+    ind=textscan(fid, '%u %u', 'HeaderLines', 1);
+    burgos = ind{1};
+    deva = ind{2};
+    
+    t1 = [ [(BB.xy(deva,1)+BB.xy(deva,3))/2]' [(BB.xy(deva,2)+BB.xy(deva,4))/2]' ];
+    t2 = [ p(1,burgos) p(1,burgos) ];
+    t = [t1; t2];
+    
+    %
+    err_measure = pdist(t)/size(t1,2);
+
+end
+
 
 
 function [IM, BB, IsT, bboxes, posemap] = get_test_file()
@@ -85,6 +104,9 @@ function [IM, BB, IsT, bboxes, posemap] = get_test_file()
     %
     number_of_samples = 20;
     posemap = 90:-15:-90;
+    
+    eye_glass_list =  [802; 2316; 2096; 4083; 469; 2960; 649; 335; 3798; 2378; 3689; 1509];
+    number_of_samples = size(eye_glass_list,1);
     
     %
     IM = cell(number_of_samples,1);
@@ -99,15 +121,30 @@ function [IM, BB, IsT, bboxes, posemap] = get_test_file()
             continue
         end
         
-        IM{j,1}         = imread(facemap{j});
-        IsT{j,1}         = imread(facemap{j});
-        BB{j,1}         = bounding_boxes{j};
+        j = eye_glass_list(i,1);
+
+        if(j==469)
+            disp('asdfasd');
+        end
+        IM{i,1}         = imread(facemap{j});
+        IsT{i,1}         = imread(facemap{j});
+        BB{i,1}         = bounding_boxes{j};
         x1 = min(bounding_boxes{j}.xy(:,1));
         y1 = min(bounding_boxes{j}.xy(:,2));
         x2 = max(bounding_boxes{j}.xy(:,3));
         y2 = max(bounding_boxes{j}.xy(:,4));
-        bboxes(j,:)     = [x1 y1 (x2-x1) (y2-y1)];  
+        bboxes(i,:)     = [x1 y1 (x2-x1) (y2-y1)];  
         j = j + 1;
+        
+%         IM{j,1}         = imread(facemap{j});
+%         IsT{j,1}         = imread(facemap{j});
+%         BB{j,1}         = bounding_boxes{j};
+%         x1 = min(bounding_boxes{j}.xy(:,1));
+%         y1 = min(bounding_boxes{j}.xy(:,2));
+%         x2 = max(bounding_boxes{j}.xy(:,3));
+%         y2 = max(bounding_boxes{j}.xy(:,4));
+%         bboxes(j,:)     = [x1 y1 (x2-x1) (y2-y1)];  
+%         j = j + 1;
     end
     
 
