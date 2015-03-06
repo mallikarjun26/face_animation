@@ -1,8 +1,9 @@
-function [shape_diff, app_diff] = main(path, show_fitting_enable)
+function [shape_diff, app_diff_avg, app_diff_min] = main(path, input_image_num_list)
 
     %
     clc;
-
+    run('/home/mallikarjun/src/vlfeat/vlfeat-0.9.19/toolbox/vl_setup')
+    
     %
     load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
     load([path '/chehra_data/intermediate_results/chehra_fids.mat']);
@@ -12,11 +13,13 @@ function [shape_diff, app_diff] = main(path, show_fitting_enable)
     load([path '/Faces5000/intermediate_results/facemap.mat']);
 
     %
-    input_image_num_list = [3852; 1438; 4678; 4093; 3852; 3927; 3437; 4522; 1590; 10; 21; 28; 34; 42; 43; 45; 503; 822; 1238; 1640];
+    show_fitting_enable = 0;
+    %input_image_num_list = [3852; 1438; 4678; 4093; 3852; 3927; 3437; 4522; 1590; 10; 21; 28; 34; 42; 43; 45; 503; 822; 1238; 1640];
     sim_image_num_list   = [1; 2; 4; 5; 6; 7; 8; 9; 11; 12; 13; 15; 16; 17; 18; 19; 20; 22; 23; 27; 32; 33];
 
     shape_diff = cell(size(input_image_num_list,1),1);
-    app_diff = cell(size(input_image_num_list,1),1  );
+    app_diff_avg = cell(size(input_image_num_list,1),1  );
+    app_diff_min = cell(size(input_image_num_list,1),1  );
     
     for i=1:size(input_image_num_list,1)
 
@@ -62,6 +65,11 @@ function [shape_diff, app_diff] = main(path, show_fitting_enable)
         app_intraface = 0;
         app_rcpr = 0;
         
+        app_chehra_min = realmax;
+        app_deva_min   = realmax;
+        app_intraface_min = realmax;
+        app_rcpr_min = realmax;
+        
         for j=1:size(sim_image_num_list,1)
             disp(['    ' num2str(j) '/' num2str(size(sim_image_num_list,1)) ' running']);
             sim_image_num = sim_image_num_list(j);
@@ -78,15 +86,38 @@ function [shape_diff, app_diff] = main(path, show_fitting_enable)
             app_deva = app_deva + app_deva_t;
             app_intraface = app_intraface + app_intraface_t;
             app_rcpr = app_rcpr + app_rcpr_t;
+            
+            if(app_chehra_min> app_chehra_t)
+                app_chehra_min = app_chehra_t;
+            end
+            
+            if(app_deva_min> app_deva_t)
+                app_deva_min = app_deva_t;
+            end
+            
+            if(app_intraface_min> app_intraface_t)
+                app_intraface_min = app_intraface_t;
+            end
+            
+            if(app_rcpr_min> app_rcpr_t)
+                app_rcpr_min = app_rcpr_t;
+            end
         end
         
-        app_diff_t.app_chehra = app_chehra / size(input_image_num_list,1); 
-        app_diff_t.app_deva = app_deva / size(input_image_num_list,1); 
-        app_diff_t.app_intraface = app_intraface / size(input_image_num_list,1); 
-        app_diff_t.app_rcpr = app_rcpr / size(input_image_num_list,1); 
+        
+        app_diff_avg_t.app_chehra = app_chehra / size(input_image_num_list,1); 
+        app_diff_avg_t.app_deva = app_deva / size(input_image_num_list,1); 
+        app_diff_avg_t.app_intraface = app_intraface / size(input_image_num_list,1); 
+        app_diff_avg_t.app_rcpr = app_rcpr / size(input_image_num_list,1); 
 
+        app_diff_min_t.app_chehra = app_chehra_min ; 
+        app_diff_min_t.app_deva = app_deva_min ; 
+        app_diff_min_t.app_intraface = app_intraface_min ; 
+        app_diff_min_t.app_rcpr = app_rcpr_min ; 
+        
         shape_diff{i} = shape_diff_t;
-        app_diff{i} = app_diff_t;
+        app_diff_avg{i} = app_diff_avg_t;
+        app_diff_min{i} = app_diff_min_t;
 
         disp(['Time taken ' num2str(toc)]);
     end
@@ -233,14 +264,34 @@ function hog_similarity = get_hog_similarity(im_1, x_1, y_1, im_2, x_2, y_2)
     x2 = uint32(min(x_1 + (im_size_1(1,2)*0.015), im_size_1(1,2))); 
     y1 = uint32(max(y_1 - (im_size_1(1,1)*0.015),1)); 
     y2 = uint32(min(y_1 + (im_size_1(1,1)*0.015), im_size_1(1,1))); 
+   
+    if( (x1>=x2) || (y1>=y2) )
+        %disp('Debug 1');
+        x1 = im_size_1(1,2);
+        x2 = x1;
+        y1 = im_size_1(1,1);
+        y2 = y1;
+    end
     im_part_1 = im_1(y1:y2, x1:x2);
- 
+    
     im_size_2 = size(im_2);
     x1 = uint32(max(x_2 - uint32(im_size_2(1,2)*0.015),1)); 
     x2 = uint32(min(x_2 + uint32(im_size_2(1,2)*0.015), im_size_2(1,2))); 
     y1 = uint32(max(y_2 - uint32(im_size_2(1,1)*0.015),1)); 
     y2 = uint32(min(y_2 + uint32(im_size_2(1,1)*0.015), im_size_2(1,1))); 
+ 
+    if( (x1>=x2) || (y1>=y2) )
+        %disp('Debug 1');
+        x1 = im_size_1(1,2);
+        x2 = x1;
+        y1 = im_size_1(1,1);
+        y2 = y1;
+    end
     im_part_2 = im_2(y1:y2, x1:x2);
+    
+    if( (x1>=x2) || (y1>=y2) )
+        disp('Debug 1');
+    end
     
     if(size(im_part_1) ~= size(im_part_2))
         im_part_1 = imresize(im_part_1, [10 10]);
