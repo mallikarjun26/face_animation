@@ -1,6 +1,12 @@
 function plot_chehra_fids(fids, im, show_image, show_fid_number)
 
     %
+    if(isempty(fids))
+        disp('plot_chehra_fids:: fids are empty');
+        return;
+    end
+
+    %
     number_of_fids = size(fids, 1);
     
     %

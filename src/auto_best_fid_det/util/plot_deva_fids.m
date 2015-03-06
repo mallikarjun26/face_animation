@@ -1,6 +1,12 @@
 function plot_deva_fids(fids, im, show_image, show_fid_number)
 
     %
+    if(isempty(fids))
+        disp('plot_deva_fids:: fids are empty');
+        return;
+    end
+    
+    %
     number_of_fids = size(fids.xy, 1);
     
     %
