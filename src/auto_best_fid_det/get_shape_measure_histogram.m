@@ -1,15 +1,31 @@
-function [shape_chehra_deva, shape_chehra_rcpr, shape_deva_rcpr, shape_chehra_intraface, shape_deva_intraface, shape_intraface_rcpr] = get_shape_measure_histogram(path)
+function [shape_chehra_deva, shape_chehra_rcpr, shape_deva_rcpr, shape_chehra_intraface, shape_deva_intraface, shape_intraface_rcpr] = get_shape_measure_histogram(path, dataset)
 
     %
     clc;
 
     %
-    load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
-    load([path '/chehra_data/intermediate_results/chehra_fids.mat']);
-    load([path '/deva_data/intermediate_results/deva_fids.mat']);
-    load([path '/intraface_data/intermediate_results/intraface_fids.mat']);
-    load([path '/rcpr_data/intermediate_results/rcpr_fids.mat']);
-    load([path '/Faces5000/intermediate_results/facemap.mat']);
+    if(dataset == 'jack')
+        load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
+        load([path '/chehra_data/intermediate_results/chehra_fids.mat']);
+        load([path '/deva_data/intermediate_results/deva_fids.mat']);
+        load([path '/intraface_data/intermediate_results/intraface_fids.mat']);
+        load([path '/rcpr_data/intermediate_results/rcpr_fids.mat']);
+        load([path '/Faces5000/intermediate_results/facemap.mat']);
+    elseif(dataset == 'lfpw')
+        load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
+        load([path '/lfpw_data/chehra_fids.mat']);
+        load([path '/lfpw_data/deva_fids.mat']);
+        load([path '/lfpw_data/intraface_fids.mat']);
+        load([path '/lfpw_data/rcpr_fids.mat']);
+        load([path '/lfpw_data/facemap.mat']);
+    else
+        load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
+        load([path '/cofw_data/chehra_fids.mat']);
+        load([path '/cofw_data/deva_fids.mat']);
+        load([path '/cofw_data/intraface_fids.mat']);
+        load([path '/cofw_data/rcpr_fids.mat']);
+        load([path '/cofw_data/facemap.mat']);
+    end
 
     %
     number_of_faces = size(facemap,2);
@@ -61,20 +77,20 @@ function [shape_chehra_deva, shape_chehra_rcpr, shape_deva_rcpr, shape_chehra_in
     end
     disp(['Time taken: ' num2str(toc)]);
     
-    save([path '/common_data/shape_comp_histograms/shape_comp_results.mat'], 'shape_chehra_deva', 'shape_chehra_rcpr', 'shape_deva_rcpr', 'shape_chehra_intraface', 'shape_deva_intraface', 'shape_intraface_rcpr');
+    save([path '/' dataset '_data/shape_comp_histograms/shape_comp_results.mat'], 'shape_chehra_deva', 'shape_chehra_rcpr', 'shape_deva_rcpr', 'shape_chehra_intraface', 'shape_deva_intraface', 'shape_intraface_rcpr');
 
     h1 = figure; hist( shape_chehra_deva, 50      ); title( 'shape chehra deva'      );
-    saveas(h1, [path '/common_data/shape_comp_histograms/shape_chehra_deva.jpg']);
+    saveas(h1, [path '/' dataset '_data/shape_comp_histograms/shape_chehra_deva.jpg']);
     h2 = figure; hist( shape_chehra_rcpr, 50      ); title( 'shape chehra rcpr'      );
-    saveas(h2, [path '/common_data/shape_comp_histograms/shape_chehra_rcpr.jpg']);
+    saveas(h2, [path '/' dataset '_data/shape_comp_histograms/shape_chehra_rcpr.jpg']);
     h3 = figure; hist( shape_deva_rcpr, 50        ); title( 'shape deva rcpr'        );
-    saveas(h3, [path '/common_data/shape_comp_histograms/shape_deva_rcpr.jpg']);
+    saveas(h3, [path '/' dataset '_data/shape_comp_histograms/shape_deva_rcpr.jpg']);
     h4 = figure; hist( shape_chehra_intraface, 50 ); title( 'shape chehra intraface' );
-    saveas(h4, [path '/common_data/shape_comp_histograms/shape_chehra_intraface.jpg']);
+    saveas(h4, [path '/' dataset '_data/shape_comp_histograms/shape_chehra_intraface.jpg']);
     h5 = figure; hist( shape_deva_intraface, 50   ); title( 'shape deva intraface'   );
-    saveas(h5, [path '/common_data/shape_comp_histograms/shape_deva_intraface.jpg']);
+    saveas(h5, [path '/' dataset '_data/shape_comp_histograms/shape_deva_intraface.jpg']);
     h6 = figure; hist( shape_intraface_rcpr, 50   ); title( 'shape intraface rcpr'   );
-    saveas(h6, [path '/common_data/shape_comp_histograms/shape_intraface_rcpr.jpg']);
+    saveas(h6, [path '/' dataset '_data/shape_comp_histograms/shape_intraface_rcpr.jpg']);
 
 end
 
