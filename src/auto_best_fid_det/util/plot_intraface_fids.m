@@ -1,4 +1,4 @@
-function plot_intraface_fids(fids, im, show_image, show_fid_number)
+function plot_intraface_fids(fids, im, show_image, show_fid_number, mark_color)
 
     %
     if(isempty(fids))
@@ -17,7 +17,7 @@ function plot_intraface_fids(fids, im, show_image, show_fid_number)
     
     %
     for i=1:number_of_fids
-        plot(fids(i,2), fids(i,1),'c.', 'MarkerSize', 12);
+        plot(fids(i,2), fids(i,1), mark_color, 'MarkerSize', 12);
         
         x_t = double(fids(i,2)+2);
         y_t = double(fids(i,1)+2);

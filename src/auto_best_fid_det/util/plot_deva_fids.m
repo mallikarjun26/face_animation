@@ -1,4 +1,4 @@
-function plot_deva_fids(fids, im, show_image, show_fid_number)
+function plot_deva_fids(fids, im, show_image, show_fid_number, mark_color)
 
     %
     if(isempty(fids))
@@ -21,7 +21,7 @@ function plot_deva_fids(fids, im, show_image, show_fid_number)
         x = double(uint32((fids.xy(i,1) + fids.xy(i,3)) / 2 ));
         y = double(uint32((fids.xy(i,2) + fids.xy(i,4)) / 2 ));
         
-        plot(x, y,'b.', 'MarkerSize', 12);
+        plot(x, y, mark_color, 'MarkerSize', 12);
         if(show_fid_number)
             text(x, y, num2str(i), 'fontsize', 12);
         end
