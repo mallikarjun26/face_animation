@@ -9,7 +9,8 @@ function dump_aflw_deva_fids(path)
     load([path '/aflw_data/facemap.mat']);
     load face_p99.mat
     model.interval = 5;
-    model.thresh = min(-0.65, model.thresh);
+    %model.thresh = min(-0.65, model.thresh);
+    model.thresh = realmin; 
 
     %
     number_of_faces = size(facemap,2);
