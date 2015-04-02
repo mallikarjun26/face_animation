@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include <iostream>
 #include <fstream>
+#include <limits>
 
 Detector::Detector(){
 	struct timeval begin, end;
@@ -78,6 +79,7 @@ Mat Detector::detect(const string imgname, int numLandmarks){
 	IplImage *frame = cvLoadImage(imgname.data(), 2|4);
 	if (frame == NULL)
     {
+      cout << "Debug 1" << endl;
       fprintf(stderr, "Cannot open image %s.Returning empty Mat...\n", imgname.data());
       return resized;
     }
@@ -181,6 +183,7 @@ Mat Detector::detect(const string imgname, Mat& landmarks, int* pose, int numLan
 	IplImage *frame = cvLoadImage(imgname.data(), 2|4);
 	if (frame == NULL)
     {
+      cout << "Debug 2" << endl;
       fprintf(stderr, "Cannot open image %s.Returning empty Mat...\n", imgname.data());
 	  //LOGGER(INFO,"Detector","detect", "Cannot open image");
       return resized;
@@ -369,6 +372,7 @@ Mat Detector::detectNorm(const string filename, const float faceWidth, const flo
 	/* Check if the image does not exist or is too small or too large */
 	if (frame == NULL)
     {
+      cout << "Debug 3" << endl;
       fprintf(stderr, "Cannot open image %s.Returning empty Mat...\n", filename.data());
       return resized;
     }
@@ -426,20 +430,55 @@ Mat Detector::detectNorm(const string filename, const float faceWidth, const flo
 	gettimeofday(&begin, NULL);
 	nFaces = detected_faces ->total;
 
+    // bool vj_failed = false;
+    // if(nFaces == 0) {
+    //     nFaces = 1;
+    //     vj_failed = true;
+    // }
+
+    //cout << "Debug 6: nFaces= " << nFaces << endl;
+
 	// Initialize intraface
-	bool isdetect = false;
+    nFaces = 1;
+    bool isdetect = false;
 	INTRAFACE::HeadPose hp;
 
     /*************** Main Landmark detection code starts here **************/
 	for (int iface = 0; iface < nFaces; iface++)
 	{ // for each face, do
 
-		// r now stores a pointer to a sequential list of elements, each of which is a face.
-		CvRect *r = (CvRect*)cvGetSeqElem(detected_faces , iface);
-		
-		float score, notFace = 0.5;
-		// get rectangular coordinates of current face in the original image.
-		Rect rect(r->x, r->y, r->width, r->height);
+		// CvRect *r = (CvRect*)cvGetSeqElem(detected_faces , iface);
+		// Rect rect(r->x, r->y, r->width, r->height);
+        // float notFace = 0.1, score;
+
+        Rect rect;
+        float notFace=std::numeric_limits<float>::min(), score;
+        rect.x = 0;
+        rect.y = 0;
+        rect.width = frame->width-1;
+        rect.height = frame->height-1;
+
+        // if(vj_failed == false) {
+		//     // r now stores a pointer to a sequential list of elements, each of which is a face.
+		//     CvRect *r = (CvRect*)cvGetSeqElem(detected_faces , iface);
+		//     
+		//     float score, notFace = 0.1;
+		//     // get rectangular coordinates of current face in the original image.
+		//     // Rect rect(r->x, r->y, r->width, r->height);
+        //     rect.x = r->x;
+        //     rect.y = r->y;
+        //     rect.width = r->width;
+        //     rect.height = r->height;
+        // }
+        // else {
+		//     float score, notFace = 0.1;
+		//     // get rectangular coordinates of current face in the original image.
+		//     //Rect rect(0, 0, 299, 299);
+        //     rect.x = 0;
+        //     rect.y = 0;
+        //     rect.width = 299;
+        //     rect.height = 299;
+        // }    
 
 		gettimeofday(&begin, NULL); // timing call.
 
@@ -448,6 +487,7 @@ Mat Detector::detectNorm(const string filename, const float faceWidth, const flo
 		{
 			faceLandmark->EstimateHeadPose( landmarks, hp ) ; // estimate head pose.
 
+            // cout << "Debug 7: score= " << score<< endl;
 			// only draw valid faces
 			if (score >= notFace) {
 
@@ -466,7 +506,7 @@ Mat Detector::detectNorm(const string filename, const float faceWidth, const flo
 				break;
 			}
 			else{
-				//cout<<"False positive face"<<endl;
+				cout<<"False positive face"<<endl;
 				continue;
 			}
 		}
@@ -483,6 +523,7 @@ Mat Detector::detectNorm(const string filename, const float faceWidth, const flo
 		cvReleaseMemStorage(&storage);
 		cvReleaseImage(&frame_bw);
 		cvReleaseImage(&frame);
+        cout << "Debug 4" << endl;
 		return resized;	
 	}
 	
@@ -984,7 +1025,7 @@ void Detector::detectNorm(const Mat& capframe, const float width, const float he
 	for (int iface = 0; iface < nFaces; iface++){
 		//Face landmark detection
 		CvRect *r = (CvRect*)cvGetSeqElem(rects, iface);
-		float score, notFace = 0.5;
+		float score, notFace = 0.1;
 		Rect rect(r->x, r->y, r->width, r->height);
 		if (faceLandmark->Detect(capframe, rect, landmarks[detectcount], score) == INTRAFACE::IF_OK)
 		{
@@ -1001,7 +1042,7 @@ void Detector::detectNorm(const Mat& capframe, const float width, const float he
 					break;
 			}
 			else{
-				//cout<<"False positive face"<<endl;
+				cout<<"False positive face"<<endl;
 				continue;
 			}
 		}
