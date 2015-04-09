@@ -18,8 +18,8 @@ function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number)
 %         train_list = [1:1345]';
         common_fid_index = 8; 
     elseif(dataset == 'aflw')
-        test_list = [1:5000]';
-        train_list = [1:24386]'; 
+        test_list = [5000:5250]';
+        train_list = [5201:5325]'; 
         common_fid_index = 9; 
     end
     
@@ -28,11 +28,14 @@ function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number)
     test_samples  = size(test_list, 1)  * 20; 
     train_samples = size(train_list, 1) * 20; 
 
-    %
-    xTr = zeros(feature_dimension, train_samples);
-    yTr = zeros(1, train_samples);
-    xTe = zeros(feature_dimension, test_samples);
-    yTe = zeros(1, test_samples);
+    % xTr = zeros(feature_dimension, train_samples);
+    % yTr = zeros(1, train_samples);
+    % xTe = zeros(feature_dimension, test_samples);
+    % yTe = zeros(1, test_samples);
+    xTr = []; 
+    yTr = []; 
+    xTe = []; 
+    yTe = []; 
 
     %
     number_of_classes = size(ground_truth_app_vector{1},1);
@@ -43,12 +46,15 @@ function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number)
         
         for j=1:number_of_classes
             sample_part = sample{j}';
-            train_sample_number = ((i-1)*20) + j;
-            xTr(:,train_sample_number) = sample_part;
-            if(part_number == j)
-                yTr(1,train_sample_number) = 1;
-            else
-                yTr(1,train_sample_number) = 0;
+
+            if(~isnan(sample_part(1)))
+                xTr = [xTr sample_part];
+                if(part_number == j)
+                    yTr = [yTr 1];
+                else
+                    yTr = [yTr 0];
+                end
+
             end
 
         end 
@@ -60,15 +66,23 @@ function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number)
         
         for j=1:number_of_classes
             sample_part = sample{j}';
-            train_sample_number = ((i-1)*20) + j;
-            xTe(:,train_sample_number) = sample_part;
-            if(part_number == j)
-                yTe(1,train_sample_number) = 1;
-            else
-                yTe(1,train_sample_number) = 0;
+            if(~isnan(sample_part(1)))
+                xTe = [xTe sample_part];
+                if(part_number == j)
+                    yTe = [yTe 1];
+                else
+                    yTe = [yTe 0];
+                end
+
             end
+
         end 
 
     end
+    
+    xTr = double(xTr);
+    yTr = double(yTr);
+    xTe = double(xTe);
+    yTe = double(yTe);
 
 end
