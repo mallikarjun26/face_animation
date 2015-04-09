@@ -156,7 +156,7 @@ function part_app_feat = get_app_feature(x, y, im)
     
     sift_feat = get_sift_feature(x, y, im);
     
-    part_app_feat = [hog_feat sift_feat];
+    part_app_feat = [hog_feat single(sift_feat)];
 end
 
 function hog_feat = get_hog_feature(x, y, im)
