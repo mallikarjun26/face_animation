@@ -61,4 +61,7 @@ function [im, fids_after] = get_truncated_face(im, fids)
     
     im = im(y1:y2, x1:x2, :);
     fids_after = [fids(:,1)-y1 fids(:,2)-x1];
+    fids_after(:,1) = fids_after(:,1) * (300 / size(im,1));
+    fids_after(:,2) = fids_after(:,2) * (300 / size(im,2));
+    im = imresize(im, [300 300]);
 end
