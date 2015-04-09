@@ -10,11 +10,24 @@ function fids_demo(path, dataset, outdim)
     rand('seed',1);
     
     %% Load data 
-    path = '/home/mallikarjun/data/face_animation' ;
+    load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
     L = cell(20, 1);
     
+    if(dataset == 'lfpw')
+        col_num = 7;
+    elseif(dataset == 'cofw')
+        col_num = 8;
+    elseif(dataset == 'aflw')
+        col_num = 9;
+    end
+
     for i=1:20
         disp(['Finding L for ' num2str(i) 'part']);
+
+        if(isnan(chehra_deva_intraface_rcpr_common_fids(i,col_num)))
+            continue;
+        end
+
         [xTr, yTr, xTe, yTe] = get_data(path, dataset, i);
         L0=pca(xTr)';    
         disp('Learning initial metric with LMNN ...')
