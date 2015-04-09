@@ -1,15 +1,16 @@
-function selected_models = get_best_model(path, dataset)
+function selected_models = get_best_model(path, dataset, auto_train_select)
 
     %
     if(dataset == 'jack')
-        load([path '/' dataset '_data/app_based_results/app_based_results.mat']);
-        load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
-    elseif(dataset == 'lfpw')
-        load([path '/' dataset '_data/app_based_results/app_based_results.mat']);
+        load([path '/' dataset '_data/app_based_results/app_based_results_auto.mat']);
         load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
     else
-        load([path '/' dataset '_data/app_based_results/app_based_results.mat']);
         load([path '/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat']);
+        if(auto_train_select == 1)
+            load([path '/' dataset '_data/app_based_results/app_based_results_auto.mat']);
+        else
+            load([path '/' dataset '_data/app_based_results/app_based_results_manual.mat']);
+        end
     end
 
     %
