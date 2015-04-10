@@ -77,7 +77,7 @@ function [im, fids_after] = get_truncated_face(im, file_id, path, fids_before)
     
     im = im(uint32(y1:y2), uint32(x1:x2), :);
 
-    fids_after = get_collab_fids(x1, y1, x2, y2, file_id, path);
+    %fids_after = get_collab_fids(x1, y1, x2, y2, file_id, path);
 
     if(~isempty(fids_after))
         fids_after = [fids_after(:,1)-y1 fids_after(:,2)-x1];
