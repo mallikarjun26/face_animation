@@ -18,8 +18,8 @@ function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number)
 %         train_list = [1:1345]';
         common_fid_index = 8; 
     elseif(dataset == 'aflw')
-        test_list = [5000:5250]';
-        train_list = [5201:5325]'; 
+        test_list = [5251:5375]';
+        train_list = [5000:5250]'; 
         common_fid_index = 9; 
     end
     
