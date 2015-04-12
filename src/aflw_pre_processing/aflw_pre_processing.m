@@ -12,7 +12,8 @@ function aflw_pre_processing(path)
     png_list = dir([path '/aflw_data/aflw/images/*.png']);
     number_of_faces = size(jpg_list, 1) + size(png_list, 1);
     number_of_faces_temp = size(faces,1);
-    facemap = cell(1, number_of_faces);
+    %facemap = cell(1, number_of_faces);
+    facemap = cell(1, 4000);
     ground_truth = cell(number_of_faces, 1);
     image_file_list = fopen([path '/aflw_data/image_file_list.txt'], 'w');
     
@@ -22,6 +23,9 @@ function aflw_pre_processing(path)
         
         if(mod(i,20)==0)
             disp([num2str(i) '/' num2str(number_of_faces_temp) ' done']);
+        end
+        if(j==4000)
+            break;
         end
       
         face_path = [path '/aflw_data/aflw/images/' faces(i).file_id];
