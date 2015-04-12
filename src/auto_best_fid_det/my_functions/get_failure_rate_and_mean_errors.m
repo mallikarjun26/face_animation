@@ -1,4 +1,4 @@
-function [fail_rate, mean_err, mean_err_parts] = get_failure_rate_and_mean_errors(path, dataset, err_margin)
+function [fail_rate, mean_err, mean_err_parts, failed_list] = get_failure_rate_and_mean_errors(path, dataset, err_margin)
 
     %
     load([path '/' dataset '_data/chehra_fids.mat']);
@@ -62,7 +62,7 @@ function [fail_rate, mean_err, mean_err_parts] = get_failure_rate_and_mean_error
 
     end
 
-    [c_fail_rate, d_fail_rate, i_fail_rate, r_fail_rate, o_fail_rate] = get_failure_rate(c_err, d_err, i_err, r_err, o_err, err_margin); 
+    [c_fail_rate, d_fail_rate, i_fail_rate, r_fail_rate, o_fail_rate, failed_list] = get_failure_rate(c_err, d_err, i_err, r_err, o_err, err_margin); 
     [c_mean_err, d_mean_err, i_mean_err, r_mean_err, o_mean_err] = get_mean_error(c_err, d_err, i_err, r_err, o_err, err_margin); 
     
     fail_rate       = [c_fail_rate, d_fail_rate, i_fail_rate, r_fail_rate, o_fail_rate];
@@ -120,7 +120,7 @@ function [c_mean_err, d_mean_err, i_mean_err, r_mean_err, o_mean_err] = get_mean
 end
 
 
-function [c_fail_rate, d_fail_rate, i_fail_rate, r_fail_rate, o_fail_rate] = get_failure_rate(c_err, d_err, i_err, r_err, o_err, err_margin)
+function [c_fail_rate, d_fail_rate, i_fail_rate, r_fail_rate, o_fail_rate, failed_list] = get_failure_rate(c_err, d_err, i_err, r_err, o_err, err_margin)
     
     num_of_samples = size(c_err, 1); 
     c_fail_rate = 0;
@@ -129,15 +129,53 @@ function [c_fail_rate, d_fail_rate, i_fail_rate, r_fail_rate, o_fail_rate] = get
     r_fail_rate = 0;
     o_fail_rate = 0;
 
+    chehra_failed_list = [];
+    deva_failed_list = [];
+    intraface_failed_list = [];
+    rcpr_failed_list = [];
+    our_failed_list = [];
+    
     for i=1:num_of_samples
 
-        c_fail_rate = c_fail_rate + did_fail(c_err{i}, err_margin);    
-        d_fail_rate = d_fail_rate + did_fail(d_err{i}, err_margin);    
-        i_fail_rate = i_fail_rate + did_fail(i_err{i}, err_margin);    
-        r_fail_rate = r_fail_rate + did_fail(r_err{i}, err_margin);    
-        o_fail_rate = o_fail_rate + did_fail(o_err{i}, err_margin);    
+        c_t = did_fail(c_err{i}, err_margin);    
+        c_fail_rate = c_fail_rate + c_t;
+        
+        d_t = did_fail(d_err{i}, err_margin);
+        d_fail_rate = d_fail_rate + d_t;
+        
+        i_t = did_fail(i_err{i}, err_margin);
+        i_fail_rate = i_fail_rate + i_t;
+        
+        r_t = did_fail(r_err{i}, err_margin);
+        r_fail_rate = r_fail_rate + r_t;
+        
+        o_t = did_fail(o_err{i}, err_margin); 
+        o_fail_rate = o_fail_rate + o_t;
+        
+        if(c_t)
+            chehra_failed_list = [chehra_failed_list; i];
+        end
+        if(d_t)
+            deva_failed_list = [deva_failed_list; i];
+        end
+        if(i_t)
+            intraface_failed_list = [intraface_failed_list; i];
+        end
+        if(r_t)
+            rcpr_failed_list = [rcpr_failed_list; i];
+        end
+        if(o_t)
+            our_failed_list = [our_failed_list; i];
+        end
+                
     end
 
+    failed_list.chehra_failed_list = chehra_failed_list;
+    failed_list.deva_failed_list = deva_failed_list;
+    failed_list.intraface_failed_list = intraface_failed_list;
+    failed_list.rcpr_failed_list = rcpr_failed_list;
+    failed_list.our_failed_list = our_failed_list;
+    
     c_fail_rate = c_fail_rate / num_of_samples;
     d_fail_rate = d_fail_rate / num_of_samples;
     i_fail_rate = i_fail_rate / num_of_samples;

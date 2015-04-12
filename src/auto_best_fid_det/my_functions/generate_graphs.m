@@ -18,7 +18,7 @@ function generate_graphs(path, dataset, metric_learning_enabled, hog_sift_mode, 
     %
     [shape_diff, app_diff_avg, app_diff_min] = get_app_measure(path, all_face_list, dataset, 1, metric_learning_enabled, hog_sift_mode, kmeans_pca_mode, shape_app_mode, k_in_knn);    
     selected_models = get_best_model(path, dataset, 1);
-    [fail_rate, mean_err, mean_err_parts] = get_failure_rate_and_mean_errors(path, dataset, err_margin);  
+    [fail_rate, mean_err, mean_err_parts, failed_list] = get_failure_rate_and_mean_errors(path, dataset, err_margin);  
     
     %
     h_f = figure;
@@ -57,7 +57,7 @@ function generate_graphs(path, dataset, metric_learning_enabled, hog_sift_mode, 
         shape_app_l = 'app_en_';
     end
 
-    save([path '/' dataset '_data/results/' metric_l '_' hog_sift_l '_' kmeans_pca_l '_' shape_app_l num2str(k_in_knn) '_in_knn_results.mat'], 'fail_rate', 'mean_err', 'mean_err_parts');
+    save([path '/' dataset '_data/results/' metric_l '_' hog_sift_l '_' kmeans_pca_l '_' shape_app_l num2str(k_in_knn) '_in_knn_results.mat'], 'fail_rate', 'mean_err', 'mean_err_parts', 'failed_list');
     saveas(h_f, [path '/' dataset '_data/results/' metric_l '_' hog_sift_l '_' kmeans_pca_l '_' shape_app_l num2str(k_in_knn) '_in_knn_failure_rate_bar_graph.jpg']);
     saveas(h_m, [path '/' dataset '_data/results/' metric_l '_' hog_sift_l '_' kmeans_pca_l '_' shape_app_l num2str(k_in_knn) '_in_knn_mean_error_bar_graph.jpg']);
     saveas(h_m_p, [path '/' dataset '_data/results/' metric_l '_' hog_sift_l '_' kmeans_pca_l '_' shape_app_l num2str(k_in_knn) '_in_knn_mean_error_part_bar_graph.jpg']);
