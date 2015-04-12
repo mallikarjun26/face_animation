@@ -1,4 +1,4 @@
-function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number)
+function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number, hog_sift_mode)
 
     %
     load([path '/' dataset '_data/app_based_results/ground_truth_app_vector.mat']);
@@ -47,6 +47,12 @@ function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number)
         for j=1:number_of_classes
             sample_part = sample{j}';
 
+            if(hog_sift_mode == 1)
+                sample_part = sample_part(1:279);
+            elseif(hog_sift_mode == 2)
+                sample_part = sample_part(280:535);
+            end         
+
             if(~isnan(sample_part(1)))
                 xTr = [xTr sample_part];
                 if(part_number == j)
@@ -66,6 +72,13 @@ function [xTr, yTr, xTe, yTe] =  get_data(path, dataset, part_number)
         
         for j=1:number_of_classes
             sample_part = sample{j}';
+
+            if(hog_sift_mode == 1)
+                sample_part = sample_part(1:279);
+            elseif(hog_sift_mode == 2)
+                sample_part = sample_part(280:535);
+            end         
+
             if(~isnan(sample_part(1)))
                 xTe = [xTe sample_part];
                 if(part_number == j)

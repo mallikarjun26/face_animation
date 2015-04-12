@@ -18,7 +18,14 @@ function [shape_diff, app_diff_avg, app_diff_min] = get_app_measure(path, input_
         load([path '/' dataset '_data/app_based_results/intraface_app_vector.mat']);
         load([path '/' dataset '_data/app_based_results/rcpr_app_vector.mat']);
         load([path '/' dataset '_data/app_based_results/ground_truth_app_vector.mat']);
-        load([path '/' dataset '_data/app_based_results/M.mat']);
+        if(hog_sift_mode == 1)
+            load([path '/' dataset '_data/app_based_results/hog_M.mat']);
+        elseif(hog_sift_mode == 2)
+            load([path '/' dataset '_data/app_based_results/sift_M.mat']);
+        elseif(hog_sift_mode == 3)
+            load([path '/' dataset '_data/app_based_results/hog_sift_M.mat']);
+        end
+
     end
 
     %
