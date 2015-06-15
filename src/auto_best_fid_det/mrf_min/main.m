@@ -38,7 +38,7 @@ function [cdir] = get_best(x)
 
     %
     cdir = reshape(x,20,4);
-    [~, cdir] = max(cdir')
+    [~, cdir] = max(cdir');
     
 end
 
@@ -50,10 +50,10 @@ function [Aeq, Beq] = get_Aeq_and_Beq()
 
     %
     for i=1:20
-        Aeq(i)    = 1;
-        Aeq(i+20) = 1;
-        Aeq(i+40) = 1;
-        Aeq(i+60) = 1;
+        Aeq(i,i)    = 1;
+        Aeq(i,i+20) = 1;
+        Aeq(i,i+40) = 1;
+        Aeq(i,i+60) = 1;
     end
 
 end
@@ -78,7 +78,7 @@ function [A, b] = get_A_and_b()
             if(part1 ~= part2)
                 r1 = (count-1)*3 + 1;
                 r2 = r1 + 1;
-                r3 = r2 + 2;
+                r3 = r2 + 1;
 
                 A(r1, pix1) = 1;
                 A(r1, pix2) = 1;
@@ -86,11 +86,11 @@ function [A, b] = get_A_and_b()
                 b(r1) = 1;
                 
                 A(r2, pix1)  = -1;
-                A(r2, count) = 1;
+                A(r2, 80+count) = 1;
                 b(r2) = 0;
 
                 A(r3, pix2)  = -1;
-                A(r3, count) = 1;
+                A(r3, 80+count) = 1;
                 b(r3) = 0;
 
                 count = count + 1;
@@ -109,6 +109,6 @@ function f = get_f(unary_weights, pairwise_weights)
 
     %
     f(1:80) = unary_weights + 1;
-    f(81:3120) = pairwise_weights;
+    f(81:3120) = pairwise_weights + 1;
 
 end

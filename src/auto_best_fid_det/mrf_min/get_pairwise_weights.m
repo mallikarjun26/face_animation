@@ -23,10 +23,16 @@ function pairwise_weights = get_pairwise_weights(dataset, part_near_exemplar)
                 exem1 = part_near_exemplar(method1, part1);
                 exem2 = part_near_exemplar(method2, part2);
 
-                pose1 = ground_truth{exem1};
-                pose2 = ground_truth{exem2};
+                if((exem1~=0) && (exem2~=0))
+                
+                  pose1 = ground_truth{exem1};
+                  pose2 = ground_truth{exem2};
 
-                pairwise_weights(count) = get_pose_diff(pose1, pose2);
+                  pairwise_weights(count) = get_pose_diff(pose1, pose2);
+                
+                else
+                  pairwise_weights(count) = 0;
+                end
                 count = count + 1;
             end
         end
@@ -35,6 +41,11 @@ function pairwise_weights = get_pairwise_weights(dataset, part_near_exemplar)
     %non_zeros = find(pairwise_weights(:));
     
     %pairwise_weights = ( pairwise_weights - min(pairwise_weights(non_zeros)) ) / range(pairwise_weights(non_zeros));
+    
+    max_t = max(pairwise_weights(:));
+    z_t = find(~pairwise_weights(:));
+    pairwise_weights(z_t) = max_t;
+    
     pairwise_weights = ( pairwise_weights - min(pairwise_weights(:)) ) / range(pairwise_weights(:));
     
 end

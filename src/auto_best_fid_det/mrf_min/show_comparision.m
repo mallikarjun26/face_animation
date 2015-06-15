@@ -1,4 +1,4 @@
-function show_comparision(dataset, sample, cdir)
+function fids = show_comparision(dataset, sample, cdir)
 
     %
     load(['~/Documents/data/iccv/' dataset '_data/chehra_fids.mat']);
@@ -8,6 +8,21 @@ function show_comparision(dataset, sample, cdir)
     load(['~/Documents/data/iccv/' dataset '_data/facemap.mat']);
     load('~/Documents/data/iccv/common_data/fids_mapping/chehra_deva_intraface_rcpr_common_fids.mat');
     addpath('../util');
+
+    %
+    if(isempty(deva_fids))
+        deva_fids.xy = NaN * ones(68,4);
+        deva_fids.c = 7;
+    end
+    if(isempty(intraface_fids))
+        intraface_fids = NaN * ones(49,2);
+    end
+    if(isempty(rcpr_fids))
+        rcpr_fids= NaN * ones(29,2);
+    end
+    if(isempty(chehra_fids))
+        chehra_fids = NaN * ones(49,2);
+    end
 
     %
     im = imread(facemap{sample});
@@ -35,30 +50,35 @@ function show_comparision(dataset, sample, cdir)
     plot_chehra_fids(fids_r, im, 1, 0, 'c.');
     
     subplot(1,5,5);
-    show_our(fids_c, fids_d, fids_i, fids_r, cdir, im) 
+    fids = show_our(fids_c, fids_d, fids_i, fids_r, cdir, im) 
 
     saveas(h, ['/home/mallikarjun/Documents/data/iccv/results/mrf_min/' dataset '/' num2str(sample) '.jpg']);
     
 end
 
-function show_our(fids_c, fids_d, fids_i, fids_r, cdir, im) 
+function fids = show_our(fids_c, fids_d, fids_i, fids_r, cdir, im) 
 
     imshow(im);
     hold on;
+    fids = zeros(20,2);
     
     temp = find(cdir==1); 
+    fids(temp,:) = [fids_c(temp,1) fids_c(temp,2)];
     temp = [fids_c(temp,1) fids_c(temp,2)];
     plot(temp(:,2),temp(:,1), 'r.')
 
     temp = find(cdir==2); 
+    fids(temp,:) = [fids_d(temp,1) fids_d(temp,2)];
     temp = [fids_d(temp,1) fids_d(temp,2)];
     plot(temp(:,2),temp(:,1), 'g.')
 
     temp = find(cdir==3); 
+    fids(temp,:) = [fids_i(temp,1) fids_i(temp,2)];
     temp = [fids_i(temp,1) fids_i(temp,2)];
     plot(temp(:,2),temp(:,1), 'b.')
 
     temp = find(cdir==4); 
+    fids(temp,:) = [fids_r(temp,1) fids_r(temp,2)];
     temp = [fids_r(temp,1) fids_r(temp,2)];
     plot(temp(:,2),temp(:,1), 'c.')
 

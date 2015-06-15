@@ -28,6 +28,10 @@ function [unary_weights, part_near_exemplar] = get_unary_weights(dataset, face_n
     [methods_parts_score(3,:), part_near_exemplar(3,:)] = get_method_score(intraface_app, exemplars_app, sim_list);
     [methods_parts_score(4,:), part_near_exemplar(4,:)] = get_method_score(rcpr_app, exemplars_app, sim_list);
 
+    inf_t = find(isinf(methods_parts_score(:)));
+    max_t = max(methods_parts_score(find(~isinf(methods_parts_score(:)))));
+    methods_parts_score(inf_t) = max_t;
+    
     methods_parts_score = ( methods_parts_score - min(methods_parts_score(:)) ) / range(methods_parts_score(:));
 
     methods_parts_score = methods_parts_score';
